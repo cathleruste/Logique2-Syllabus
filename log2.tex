@@ -1,0 +1,51 @@
+% Cours de Logique 2ème à la HEB-ESI
+% ----------------------------------
+\documentclass[a4paper,oneside]{book}
+\input{log2.sty}     % Style principal pour le bouquin
+\input{algoesi.sty}  % Définittion pour les algorithmes
+\input{auto.sty}     % Style généré par l'outil de conversion 
+
+% Pour n'inclure que quelques chapitres
+% (plus rapide en phase d'écriture)
+% -------------------------------------
+%\includeonly{log1-chapitre-liste}
+
+% Constantes
+% -----------------------------------------------
+\newcommand{\ecole}{Haute École de Bruxelles}
+\newcommand{\entite}{École Supérieure d'Informatique}
+\newcommand{\entiteadresse}{Rue Royale 67 – 1000 Bruxelles}
+\newcommand{\entitesite}{www.heb.be/esi}
+\newcommand{\entitetel}{02/219.15.46}
+\newcommand{\entitemail}{esi@heb.be}
+\newcommand{\etude}{Bachelor en Informatique}
+\newcommand{\cours}{Logique\\\&\\Techniques de programmation}
+\newcommand{\siglecours}{LOG2}
+\newcommand{\annee}{2\up{ème}}
+\newcommand{\auteura}{L. Beeckmans}
+\newcommand{\auteurb}{C. Leruste}
+\newcommand{\contact}{cleruste@heb.be}
+\newcommand{\ladate}{\today}
+
+\title{Cours de Logique \annee}
+\author{}
+\date{\today}
+
+% Les différentes parties du document
+% -----------------------------------
+\begin{document}
+\include{log2-debut}
+\include{log2-chapitre-intro}
+\include{log2-chapitre-listeChainee}
+%\include{log2-chapitre-pile}
+%\include{log2-chapitre-file}
+%\include{log2-chapitre-association}
+%\include{log2-chapitre-récursivité}
+%\include{log2-chapitre-arbre}
+%\include{log2-chapitre-graphe}
+\appendix
+%\include{log1-annexe-parcours-tab}
+%\include{log1-annexe-suites}
+%\include{log1-annexe-aide-memoire}
+\include{log1-fin}
+\end{document}
