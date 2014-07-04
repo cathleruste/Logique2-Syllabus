@@ -336,7 +336,7 @@
 					\RComment (initialisés comme ci-dessus)
 					\Decl échiquier~: tableau [1 à 8, 1 à 8] d'entiers (initialisés à 0)
 					\Let échiquier[ligne,col] \Gets 1
-					\Stmt backtracking (échiquier, 2, ligne, {dots}, \ \textsf{$\Delta L$}, \textsf{$\Delta C$})
+					\Stmt backtracking (échiquier, 2, ligne, col, \ \textsf{$\Delta L$}, \textsf{$\Delta C$})
 					\Stmt afficher(échiquier)
 				\EndModule
 			\end{pseudo}
@@ -445,7 +445,7 @@
 
 		\cadre{
 			\begin{pseudo}
-				\Stmt \K{Énumération} Direction~: NORD, {dots}, SUD, OUEST
+				\Stmt \K{Énumération} Direction~: NORD, EST, SUD, OUEST
 			\end{pseudo}
 		}
 
@@ -485,7 +485,7 @@
 		pièce de monnaie ou d'un billet du portefeuille.
 
 		\textbf{Exemple:~} 
-		Avec les billets et pièces~: [ 10, 20, 50, 50, 5, 20, 2, 10, 10, {dots}, 
+		Avec les billets et pièces~: [ 10, 20, 50, 50, 5, 20, 2, 10, 10, 2 ], 
 		peut-on payer 123 {\texteuro} ?
 		
 		Y a-t-il une autre façon de présenter les données 

@@ -1,0 +1,5779 @@
+
+\begin{flushleft}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{11.242001cm}m{4.741cm}}
+{\sffamily\bfseries Chapitre 2~-- La pile}
+
+~
+ &
+\raggedleft\arraybslash  \includegraphics[width=2.009cm,height=3.847cm]{a2012Logique2eme-img011.png} \\
+\end{supertabular}
+\end{flushleft}
+
+\bigskip
+
+\section[Définition]{\sffamily Définition}
+{
+Une \textbf{p}\textbf{ile} est une collection d'éléments admettant les fonctionnalités suivantes :}
+
+\liststyleWWviiiNumxxv
+\begin{itemize}
+\item {
+on peut toujours ajouter un élément à la collection}
+\item {
+seul le dernier élément ajouté peut être consulté ou enlevé}
+\item {
+on peut savoir si la collection est vide}
+\end{itemize}
+
+\bigskip
+
+{
+La pile (en anglais \textit{stack}) est donc une collection de données de type \textit{dernier entré, premier sorti} (en
+anglais on dit ``LIFO'', c'est-à-dire \textit{last in first out}). L'analogie avec la pile de dossiers sur un bureau
+est claire : les dossiers sont déposés et retirés du sommet \textstyleEmphasis{\textup{et on ne peut jamais ajouter,
+retirer ou consulter un dossier qui se trouve ailleurs dans la pile}}.}
+
+{\centering  \includegraphics[width=7.553cm,height=4.357cm]{a2012Logique2eme-img012.jpg} \par}
+{
+On ne peut donc pas parcourir une pile, ou consulter directement le \textit{n}{}-ème élément. Les opérations permises
+avec les piles sont donc peu nombreuses, mais c'est précisément là leur spécificité : elles ne sont utilisées en
+informatique que dans des situations particulières où seules ces opérations sont requises et utilisées. Paradoxalement,
+on implémentera une pile en restreignant des structures plus riches aux seules opérations autorisées par les piles.}
+
+{
+Des exemples d'utilisations sont la gestion de la mémoire par les micro-processeurs, l'évaluation des expressions
+mathématiques en notation polonaise inverse, la fonction «~ctrl-Z~» dans un traitement de texte qui permet d'annuler
+les frappes précédentes, la mémorisation des pages web visitées par un navigateur, etc. Nous les utiliserons aussi plus
+loin dans ce cours pour parcourir les arbres et les graphes.}
+
+\section[Implémentation orienté{}-objet]{\sffamily Implémentation orienté-objet}
+{
+Nous allons d'abord décrire l'allure générale de la classe pile. Nous ne précisons pas encore les détails de
+l'implémentation, plusieurs possibilités existent, que nous détaillerons à titre d'exercice.}
+
+
+\bigskip
+
+
+\bigskip
+
+{\sffamily
+\textbf{classe} Pile<T>\ \ \ \ \ \ \ \ \ \ // T est le type des éléments de la pile}
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{privé} :\ \ \ \ \ \ \ \ \ \ \ \ // à détailler plus tard}
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{public} :}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }\textbf{constructeur} Pile<T>( ) \ \ \ \ \ \ // crée une pile vide}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }\textbf{méthode} empiler(élément : T)\ \ \ \ // ajoute un élément au sommet de la pile}
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ sommet( ) }$\rightarrow $
+\textsf{T\ \ \ \ \ \ // retourne la valeur de l'élément au sommet}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ // de la pile, sans le retirer}
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ dépiler( ) }$\rightarrow $\textsf{
+T\ \ \ \ \ \ // enlève et retourne l'élément au sommet}}
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ estVide( ) }$\rightarrow $\textsf{
+booléen\ \ \ \ // indique si la pile est vile\ \ }}
+
+{\sffamily\bfseries
+fin classe}
+
+\subsection[Remarques~:]{ Remarques :}
+\liststyleWWviiiNumxxiii
+\begin{itemize}
+\item {
+Théoriquement, et dans la majorité des utilisations, la pile est \textit{infinie}, c'est-à-dire qu'on peut y ajouter un
+nombre indéterminé d'éléments (comme c'était le cas pour la classe Liste étudiée en 1\textsuperscript{ère} année). Dans
+certaines situations, on peut cependant imposer une capacité maximale à la pile (en pratique, c'est le cas de la pile
+de dossiers dans un bureau, elle est forcément limitée par la hauteur du plafond !). Nous aborderons ce cas particulier
+dans les exercices. }
+\item {
+Lors de l'implémentation de la classe, il faudra songer à envoyer un message d'erreur lorsqu'on utilise les méthodes
+\textit{sommet} et \textit{dépiler} si la pile est vide. Si la pile possède une taille maximale, alors c'est
+\textit{empiler} qui doit générer un message d'erreur lorsque la pile est pleine.}
+\item {
+Nous avons utilisé ici des noms de méthodes neutres indépendants de tout langage de programmation. Dans la littérature
+anglaise, on trouvera souvent \textit{push}, \textit{top} et \textit{pop} en lieu et place de \textit{empiler},
+\textit{sommet} et \textit{dépiler}.}
+\end{itemize}
+\section[Exemple d{}'utilisation]{\sffamily Exemple d'utilisation}
+{\color{black}
+Afin d'illustrer l'utilisation de la classe Pile, nous donnons pour exemple un algorithme qui lit une suite
+d'enregistrements d'un fichier \textbf{fileIn} (de type \textbf{Info}) et les reproduit en ordre inverse dans le
+fichier \textbf{fileOut}.}
+
+{\sffamily
+\textbf{module} inverserOrdre(fileIn$\downarrow $: FichierEntrée d'Info, fileOut$\uparrow $ : FichierSortie d'Info)}
+
+{\sffamily
+\ \ enr : Info}
+
+{\sffamily
+\ \ \ \ \ pile : Pile<Info>}
+
+
+\bigskip
+
+{\sffamily
+\ \ \ \ \ // 1\textsuperscript{ère} étape : parcours du fichier et mise en pile}
+
+{\sffamily
+\ \ \ \ \ pile $\leftarrow $ \textbf{nouvelle} Pile<Info>}
+
+{\sffamily
+\ \ \ \ \ fileIn.ouvrir( )}
+
+{\sffamily
+\ \ \ \ \ enr $\leftarrow $ fileIn.lire( )}
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{tant que} NON fileIn.EOF( ) \textbf{faire}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ pile.empiler(enr)}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ enr $\leftarrow $ fileIn.lire( )}
+
+{\sffamily\bfseries
+\ \ \ \ \ fin tant que}
+
+{\sffamily
+\ \ \ \ \ fileIn.fermer( )}
+
+{\sffamily
+\ \ \ \ \ // 2\textsuperscript{ème} étape : vider la pile et écrire les éléments dans le fichier de sortie}
+
+{\sffamily
+\ \ \ \ \ fileOut.ouvrir( )}
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{tant que} NON pile.estVide( ) \textbf{faire}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ enr $\leftarrow $ pile.dépiler( )}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ fileOut.écrire(enr)}
+
+{\sffamily\bfseries
+\ \ \ \ \ fin tant que}
+
+{\sffamily
+\ \ \ \ \ fileOut.fermer( )}
+
+{\sffamily\bfseries
+fin module}
+
+\section[Exercices]{\sffamily Exercices}
+\section[Ex. 1. Implémentation via une~liste chainée]{\sffamily Ex. 1. Implémentation via
+une~liste chainée}
+{\color{black}
+Détaillez l'implémentation de la classe pile en utilisant comme attribut privé une liste chainée. Veillez à utiliser les
+méthodes qui permettent la gestion la plus efficace.}
+
+\section[Ex. 2. La pile de taille finie]{\sffamily Ex. 2. La pile de taille finie}
+{
+On envisage ici une pile dont la capacité est limitée : elle ne peut contenir au plus qu'un nombre donné d'éléments. On
+demande d'implémenter ce type de pile en utilisant un tableau. Les attributs privés de la classe seront~les suivants :}
+
+
+\bigskip
+
+{\sffamily
+\textbf{privé~}:}
+
+{\sffamily
+\ \ \ \ \ tab : \textbf{tableau} de T \ \ \ \ // tableau (dynamique) contenant les éléments de la pile}
+
+{\sffamily
+\ \ \ \ \ indSommet : entier\textbf{\textit{ \ \ \ \ }}// indice du sommet de la pile}
+
+{\sffamily
+\ \ \ \ \ tailleMax : entier\textbf{\textit{ \ \ \ \ }}// taille maximale de la pile}
+
+{
+On remplira le tableau en ajoutant les éléments les uns à la suite des autres et en retenant la position du dernier
+élément, qui correspondra à la valeur de l'attribut \textbf{sommet}. Cet attribut augmentera lorsqu'on ajoute un
+élément, et va décroître lorsqu'on en retire un.}
+
+\section[Détaillez l{}'implémentation des méthodes de la classe pile correspondant à cette situation. Il faudra aussi
+adapter le constructeur, en lui donnant comme paramètre la taille maximale de la pile.]{
+Détaillez l'implémentation des méthodes de la classe pile correspondant à cette situation. Il faudra aussi adapter le
+constructeur, en lui donnant comme paramètre la taille maximale de la pile.}
+\section[Ex. 3. L{}'itinéraire retour]{\sffamily Ex. 3. L'itinéraire retour}
+{\color{black}
+Un fichier \textbf{aller} contient la description d'un itinéraire. Chaque enregistrement du fichier est une structure
+\textbf{étape} contenant les champs \textbf{ville} (chaine) et \textbf{km} (réel). Ecrire un algorithme qui crée le
+fichier \textbf{retour} qui contiendra -- au même format que \textbf{aller} -- la description de l'itinéraire retour.}
+
+{\itshape\color{black}
+Exemple.}
+
+{
+\textbf{aller}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textbf{retour}}
+
+{
+Bruxelles\ \ \ \ 0\ \ \ \ \ \ \ \ Amsterdam\ \ \ \ 0}
+
+{
+Antwerpen\ \ \ \ 40\ \ \ \ \ \ \ \ Utrecht\ \ \ \ 50}
+
+{
+Breda\ \ \ \ \ \ 100\ \ \ \ \ \ \ \ Breda\ \ \ \ \ \ 120}
+
+{
+Utrecht\ \ \ \ 170\ \ \ \ \ \ \ \ Antwerpen\ \ \ \ 180}
+
+{
+Amsterdam\ \ \ \ 220\ \ \ \ \ \ \ \ Bruxelles\ \ \ \ 220}
+
+
+\bigskip
+
+
+\bigskip
+
+
+\bigskip
+
+
+\bigskip
+
+
+\bigskip
+
+
+\bigskip
+
+\begin{flushleft}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{11.032001cm}m{4.951cm}}
+{\sffamily\bfseries Chapitre 3~-- La file}
+
+~
+ &
+ \includegraphics[width=4.77cm,height=3.567cm]{a2012Logique2eme-img013.jpg} \\
+\end{supertabular}
+\end{flushleft}
+
+\bigskip
+
+\section[Définition]{\sffamily Définition}
+{
+Une \textbf{f}\textbf{ile} est une collection d'éléments admettant les fonctionnalités suivantes :}
+
+\liststyleWWviiiNumxxv
+\begin{itemize}
+\item {
+on peut toujours ajouter un élément à la collection}
+\item {
+seul le premier élément ajouté peut être consulté ou enlevé}
+\item {
+on peut savoir si la collection est vide}
+\end{itemize}
+
+\bigskip
+
+{
+La file (en anglais \textit{queue}) est donc une collection de données de type \textit{premier}\textit{ entré, premier
+sorti} (en anglais on dit ``FIFO'', c'est-à-dire \textit{first in first out}). L'analogie avec une file de clients à un
+guichet (poste, caisse du supermarché{\dots}) est évidente : c'est le premier arrivé qui est le premier servi, et il
+est très malvenu d'essayer de doubler une personne dans une file ! Noter qu'une fois entré dans une \textit{file} -- au
+sens informatique du terme -- on ne peut pas en sortir par l'arrière, le seul scénario possible pour en sortir est
+d'attendre patiemment son tour et d'arriver en tête de la file.}
+
+{
+De même que pour la pile, on ne peut donc non plus parcourir une file, ou consulter directement le \textit{n}{}-ème
+élément. Les files sont très utiles en informatique, citons par exemple la création de mémoire tampon (\textit{buffer})
+dans de nombreuses applications, les processeurs multitâches qui doivent accorder du temps-machine à chaque tâche, la
+file d'attente des impressions pour une imprimante{\dots}}
+
+\section[Implémentation orienté{}-objet]{\sffamily Implémentation orienté-objet}
+{
+Comme pour la pile, la classe File ne contient qu'un nombre restreint de méthodes qui correspondent aux quelques
+opérations permises avec cette structure : ajouter un élément (\textit{«~enfiler~»}), consulter l'élément de tête, et
+le retirer (\textit{«~enfiler~»}). Comme précédemment, nous ne décrivons que les entêtes des constructeur et méthodes,
+le détail de l'implémentation sera laissé à titre d'exercices.}
+
+
+\bigskip
+
+{\sffamily
+\textbf{classe} File<T>\ \ \ \ \ \ \ \ \ \ // T est le type des éléments de la file}
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{privé} :\ \ \ \ \ \ \ \ \ \ \ \ // à détailler plus tard}
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{public} :}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }\textbf{constructeur} File<T>( ) \ \ \ \ \ \ // crée une file vide}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }\textbf{méthode} enfiler(élément : T)\ \ \ \ // ajoute un élément dans la file}
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ tête( ) }$\rightarrow $ \textsf{T\ \ \ \ \ \ //
+retourne la valeur de l'élément en tête}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ // de file, sans le retirer}
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ défiler( ) }$\rightarrow $\textsf{
+T\ \ \ \ \ \ // enlève et retourne l'élément de tête}}
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ estVide( ) }$\rightarrow $\textsf{
+booléen\ \ \ \ // indique si la file est vile\ \ }}
+
+{\sffamily\bfseries
+fin classe}
+
+\subsection[]{ }
+\subsection[Remarques~:]{ Remarques :}
+\liststyleWWviiiNumxxiii
+\begin{itemize}
+\item {
+De même que dans le chapitre précédent, la file est supposée \textit{infinie}, c'est-à-dire qu'on peut y ajouter un
+nombre indéterminé d'éléments. Le cas de la file limitée à une capacité maximale sera envisagé dans l'exercice 2. }
+\item {
+Dans l'implémentation, il faudra songer à envoyer un message d'erreur lorsqu'on utilise les méthodes \textit{tête} et
+\textit{défiler} si la file est vide. Si la file possède une taille maximale, alors c'est \textit{enfiler} qui doit
+générer un message d'erreur lorsque la file est pleine.}
+\end{itemize}
+\section[Exercices]{\sffamily Exercices}
+\section[Ex. 1. Implémentation via une~liste chainée~bidirectionnelle]{\sffamily Ex. 1.
+Implémentation via une~liste chainée~bidirectionnelle}
+{\color{black}
+Détaillez l'implémentation de la classe file en utilisant comme représentation des données une liste chainée
+bidirectionnelle.}
+
+\section[Ex. 2. La file de taille limitée]{\sffamily Ex. 2. La file de taille limitée}
+{
+La file de taille limitée ne peut contenir au plus qu'un nombre donné d'éléments. On demande d'implémenter ce type de
+file en utilisant un tableau. Les attributs privés de la classe seront~les suivants :}
+
+
+\bigskip
+
+{\sffamily
+\textbf{privé~}:}
+
+{\sffamily
+\ \ \ \ \ tab : \textbf{tableau} de T \ \ \ \ // tableau (dynamique) contenant les éléments de la file}
+
+{\sffamily
+\ \ \ \ \ premier : entier\textbf{\textit{ \ \ \ \ }}// indice du premier élément entré (tête de file)}
+
+{\sffamily
+\ \ \ \ \ dernier : entier\textbf{\textit{ \ \ \ \ }}// indice du dernier élément entré (fin de file)}
+
+{\sffamily
+\ \ \ \ \ tailleMax : entier\textbf{\textit{ \ \ \ \ }}// taille maximale de la file}
+
+{
+Nous proposons ici d'offrir un constructeur qui reçoit la taille maximale de la file et qui crée un tableau d'indices 0
+à tailleMax (le tableau aura donc un élément de plus que la taille maximale de la file, nous allons expliquer
+pourquoi). On remplit le tableau en ajoutant les éléments les uns à la suite des autres en retenant la position du
+premier et du dernier via deux indices. Lorsqu'on ajoute un élément, la position du dernier va augmenter, et lorsqu'on
+enlève un élément, cela revient à augmenter la position du premier, afin d'éviter de devoir retasser l'ensemble de la
+file en début de tableau, ce qui serait une perte d'efficacité. }
+
+{
+\textit{Exemple}.}
+
+{
+Supposons qu'après la création de la file, les éléments 4, 3, 6 et 2 ont été ajoutés. L'indice du premier est 0 et celui
+du dernier est 3.}
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{1.171cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.232cm}|}
+\hline
+\centering{\sffamily 4} &
+\centering{\sffamily 3} &
+\centering{\sffamily 6} &
+\centering{\sffamily 2} &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+\\\hline
+\end{supertabular}
+\end{center}
+{
+On ajoute l'élément 7. L'indice du dernier est à présent 4.}
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{1.171cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.232cm}|}
+\hline
+\centering{\sffamily 4} &
+\centering{\sffamily 3} &
+\centering{\sffamily 6} &
+\centering{\sffamily 2} &
+\centering{\sffamily 7} &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+\\\hline
+\end{supertabular}
+\end{center}
+{
+On enlève un élément de la file. L'indice du premier vaut maintenant 1}
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{1.171cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.232cm}|}
+\hline
+~
+ &
+\centering{\sffamily 3} &
+\centering{\sffamily 6} &
+\centering{\sffamily 2} &
+\centering{\sffamily 7} &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+\\\hline
+\end{supertabular}
+\end{center}
+{
+Ce mécanisme peut se faire de façon circulaire : arrivés en fin de tableau, les~indices premier et dernier repassent à
+0. Lorsque premier et dernier sont égaux, la file n'a qu'un seul élément. Si cet élément est supprimé, l'incrémentation
+de premier aura pour conséquence que l'indice premier sera d'une unité supérieur à l'indice dernier (en tenant compte
+de la rotation des valeurs), et ce sera donc la condition correspondant à une file vide. Le tableau ne sera jamais
+rempli au maximum pour pouvoir distinguer le cas d'une file vide et le cas d'une file pleine. Nous placerons donc dans
+le tableau au maximum tailleMax éléments (en laissant un élément «~vide~» entre les indices dernier et premier). }
+
+\section[Ex. 3. Le monte{}-charge]{\sffamily Ex. 3. Le monte-charge}
+{
+Un monte-charge de chantier assure le transport de personnes et de matériel entre deux niveaux. Lorsque le monte-charge
+arrive à un étage, tous ses passagers en sortent. La charge maximale admise à la valeur MAX (donnée en paramètre).
+Étant donné les risques liés à l'utilisation du monte-charge en surcharge, le poids de chacun des passagers et des
+charges qu'ils transportent (outils, brouette de sable{\dots}) est vérifié avant l'entrée dans le monte-charge. }
+
+{
+Pour gérer l'embarquement dans le monte-charge, on souhaite faire appel à un algorithme «~embarquement~» qui détermine
+combien de personnes qui se trouvent actuellement en file devant le monte-charge peuvent y entrer. }
+
+{
+Cet algorithme respectera l'ordre d'arrivée des personnes~et mettra à jour la file des personnes en attente qu'il aura
+reçue en paramètre.}
+
+\liststyleWWviiiNumxvi
+\begin{enumerate}
+\item {
+Choisissez une représentation de données adaptée à la solution du problème et justifiez votre choix. }
+\item {
+Écrivez l'algorithme «~embarquement~»}
+\item {
+Écrivez l'algorithme «~arrivée~» qui ajoute à la file une personne d'un poids donné en paramètre.}
+\item {
+Quels cas doit-on envisager ?}
+\end{enumerate}
+\section[Ex. 4. A l{}'envers]{\sffamily Ex. 4. A l'envers}
+{\color{black}
+Écrire un module recevant en paramètre une file d'entiers. A l'issue de ce module, les valeurs de la file seront en
+ordre inverse et débarrassées des éléments pairs. }
+
+{\color{black}
+\textit{Exemple.} \textit{Si le contenu de la file est le suivant :}}
+
+{\centering\color{black}
+1 $\rightarrow $ 0 $\rightarrow $ 4 $\rightarrow $ 25 $\rightarrow $ 20 $\rightarrow $ 11 $\rightarrow $ 3 $\rightarrow
+$ 7 $\rightarrow $ 8 $\rightarrow $ 73 $\rightarrow $ 2 $\rightarrow $ 4
+\par}
+
+{\itshape\color{black}
+son contenu sera après traitement : }
+
+{\centering\color{black}
+73 $\rightarrow $ 7 $\rightarrow $ 3 $\rightarrow $ 11 $\rightarrow $ 25 $\rightarrow $ 1
+\par}
+
+
+\bigskip
+
+\clearpage
+\bigskip
+
+\begin{flushleft}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{10.14cm}m{5.8430004cm}}
+{\sffamily\bfseries Chapitre 4~-- L'association}
+
+~
+ &
+ \includegraphics[width=5.66cm,height=2.536cm]{a2012Logique2eme-img014.png} \\
+\end{supertabular}
+\end{flushleft}
+
+\bigskip
+
+\section[Introduction]{\sffamily Introduction}
+{
+Dans ce chapitre, nous considérons des ensembles de données possédant une \textbf{clé} (aussi appelée
+\textbf{identifiant}). Par définition, \ la clé est unique pour chaque élément de \ l'ensemble. Vous connaissez déjà de
+nombreux exemples par le cours de bases de données, citons~entre autres :}
+
+\liststyleWWviiiNumxxiii
+\begin{itemize}
+\item {
+le numéro d'étudiant, unique pour chaque étudiant de l'ESI}
+\item {
+le numéro de châssis d'un véhicule automobile}
+\item {
+le numéro de catalogue des produits vendus dans une grande surface}
+\item {
+le code postal des communes de Belgique, etc.}
+\end{itemize}
+
+\bigskip
+
+{
+Pour pouvoir stocker les éléments de ce type d'ensemble dans le cadre de processus qui requièrent des accès fréquents
+aux données, nous devons recourir -- parmi les structures de données vues jusqu'ici -- au tableau ou à la liste (la
+liste non chainée vue en 1\textsuperscript{ère} année). L'inconvénient de ces structures réside dans le fait de devoir
+localiser les données par un indice, qui est dans la plupart des cas un numéro d'ordre arbitraire qui n'est pas
+directement lié à la clé ; il faut donc toujours accompagner la structure choisie d'un outil de recherche, ce qui
+implique un parcours des données pour chacune des opérations de bases telles que la modification, la consultation ou la
+suppression d'un élément.}
+
+
+\bigskip
+
+{
+Prenons l'exemple des étudiants de l'ESI dont l'identifiant est un entier de 5 chiffres (par ex. 35421). Si on stocke
+les données dans un tableau par ordre alphabétique, il est évident que l'indice de la case où se trouve un étudiant
+donné n'aura aucun rapport direct avec son numéro d'étudiant. De même si on trie les données sur les numéros
+d'étudiant, rien ne permet de le localiser directement, si ce n'est dans ce cas que la recherche pourrait être
+accélérée (par une recherche dichotomique par ex.). On pourrait aussi envisager de placer un étudiant directement dans
+la case correspondant à son numéro d'étudiant (ainsi, l'étudiant 35421 serait dans la case 35421) mais ce n'est pas une
+idée très heureuse~car elle exigerait d'utiliser un tableau énorme dont la majorité des cases seraient inutilisées (il
+n'y a pas 35000 étudiants à l'ESI !) et de plus le tableau contiendrait de nombreux trous (il n'y a pas un étudiant
+pour chacun des numéros dans un intervalle donné, certains numéros disparaissent par exemple suite à un abandon).}
+
+
+\bigskip
+
+{
+Nous allons dans ce chapitre construire une structure qui permet de faire la liaison directe entre un élément et sa clé,
+et qui nous dispensera du problème «~technique~» de devoir rechercher cet élément dans la structure. La connaissance de
+sa clé devrait permettre de le localiser immédiatement par un algorithme de complexité minimale (en O(1) plutôt que en
+O(n)).}
+
+\section[]{\sffamily }
+\section[Définition]{\sffamily Définition}
+{
+Une \textbf{association} (on dit aussi \textit{dictionnaire}~ou encore \textit{map}~selon la terminologie anglaise) lie
+des éléments à leur clé (ou identifiant). Il s'agit d'une structure de données qui contient des couples (clé, valeur)
+et qui autorise les opérations suivantes : stocker, retirer et modifier un élément à partir de sa clé, connaitre le
+nombre d'éléments de l'ensemble (c'est-à-dire le nombre de couples), et obtenir la liste des clés des éléments présents
+dans la structure.}
+
+\section[Description orienté{}-objet]{\sffamily Description orienté-objet}
+{
+Nous allons définir une classe Map (pour des raisons pratiques, nous optons pour le nom anglais en raison de sa
+brièveté) dont les méthodes réalisent les opérations citées ci-dessus. Les éléments contenus dans cette «~map~» sont
+des couples (clé, valeur). Plus précisément ce sont des variables structurées dont les champs sont d'une part la clé
+(de type K, le plus souvent un entier ou une chaine de caractère) et d'autre part la valeur (de type T quelconque). En
+particulier, la clé peut être elle-même un champ de la valeur, ce qui peut paraître redondant, mais nécessaire pour le
+fonctionnement de la classe.}
+
+
+\bigskip
+
+{\sffamily
+\textbf{classe} Map<K, T>\ \ \ \ \ \ \ \ // K est le type de la clé }
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ // et T celui de la valeur}
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{privé} :\ \ \ \ \ \ \ \ \ \ \ \ // choix à détailler plus tard}
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{public} :}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }\textbf{constructeur} Map<K, T>({\dots}) \ \ \ \ // initialise la
+structure vide}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }\textbf{méthode} setÉlément(clé : K, val : T)\ \ // ajoute le couple de clé donnée }
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ getValeur(clé : K) }$\rightarrow $
+\textsf{T\ \ \ \ // retourne la valeur associée à la clé}}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }\textbf{méthode} supprimer(clé : K)\ \ \ \ // retire le couple associé à la clé}
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ contient(clé : K) }$\rightarrow $
+\textsf{booléen\ \ \ \ // indique si le couple de clé donnée est }}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ // présent}
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ taille( ) }$\rightarrow $\textsf{
+entier\ \ \ \ \ \ // retourne le nombre de couples}}
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ listeClés( ) }$\rightarrow $\textsf{
+Liste<K>\ \ \ \ // retourne la liste des clés présentes}}
+
+{\sffamily\bfseries
+fin classe}
+
+\subsection[La méthode setÉlément peut éventuellement écraser une valeur précédente si la clé était déjà présente. Les
+méthodes getValeur et supprimer génèrent un message d{}'erreur si la clé en paramètre est absente de l{}'ensemble. La
+dernière méthode est nécessaire pour pouvoir parcourir les éléments de l{}'ensemble. En effet, sa structure interne
+étant un attribut privé inconnu à l{}'extérieur de la classe, il est nécessaire d{}'avoir un outil donnant la liste des
+clés présentes. En parcourant la liste et en utilisant la méthode getValeur, on pourra ainsi passer en revue tous les
+éléments de l{}'association. Noter que la liste retournée n{}'est pas forcément dans l{}'ordre des clés, c{}'est une
+limitation de cette structure.]{ La méthode setÉlément peut éventuellement écraser une valeur
+précédente si la clé était déjà présente. Les méthodes getValeur et supprimer génèrent un message d'erreur si la clé en
+paramètre est absente de l'ensemble. La dernière méthode est nécessaire pour pouvoir parcourir les éléments de
+l'ensemble. En effet, sa structure interne étant un attribut privé inconnu à l'extérieur de la classe, il est
+nécessaire d'avoir un outil donnant la liste des clés présentes. En parcourant la liste et en utilisant la méthode
+getValeur, on pourra ainsi passer en revue tous les éléments de l'association. Noter que la liste retournée n'est pas
+forcément dans l'ordre des clés, c'est une limitation de cette structure.}
+\section[Exemple d{}'utilisation]{\sffamily Exemple d'utilisation}
+\subsection[Illustrons par un exemple l{}'utilité de la classe Map. Supposons qu{}'on veuille faire des statistiques sur
+les marques de voitures d{}'un grand parc automobile. On voudrait connaître le nombre de véhicules pour chacune des
+marques présentes. Les données sont contenues dans un fichier fichAuto dont chaque enregistrement de type Voiture
+contient les champs marque (chaine), modèle (chaine), immatriculation (chaine), et d{}'autres données qui ne sont pas
+utiles ici.]{ \textmd{Illustrons par un exemple l'utilité de la classe Map. Supposons qu'on
+veuille faire des statistiques sur les marques de voitures d'un grand parc automobile. On voudrait connaître le nombre
+de véhicules pour chacune des marques présentes. Les données sont contenues dans un fichier }fichAuto\textmd{ dont
+chaque enregistrement de type }Voiture\textmd{ contient les champs }marque\textmd{ (chaine), }modèle\textmd{ (chaine),
+}immatriculation\textmd{ (chaine), et d'autres données qui ne sont pas utiles ici.}}
+\subsection[Ecrivons une première version sans utiliser la classe Map. Nous avons besoin d{}'un compteur associé à
+chacune des marques de voitures. Il est possible d{}'utiliser un tableau, mais avec l{}'inconvénient de ne pas savoir à
+l{}'avance le nombre de marques différentes (ce qui pourrait se solutionner en déclarant le tableau avec une taille
+raisonnablement grande dans ce contexte, 500 par exemple). Nous allons plutôt opter pour une liste (classe Liste), dont
+les éléments seront une structure eltListe contenant les champs marque (chaine) et cpt (entier). La démarche est
+simple~: lorsqu{}'une nouvelle marque est rencontrée, il faut ajouter un compteur dans la liste initialisé à 1~; si la
+marque a déjà été rencontrée, il faut retrouver le compteur associé à cette marque et l{}'incrémenter. Un module de
+recherche est donc indispensable pour le bon fonctionnement.]{ \textmd{Ecrivons une première
+version sans utiliser la classe Map. Nous avons besoin d'un compteur associé à chacune des marques de voitures. Il est
+possible d'utiliser un tableau, mais avec l'inconvénient de ne pas savoir à l'avance le nombre de marques différentes
+(ce qui pourrait se solutionner en déclarant le tableau avec une taille raisonnablement grande dans ce contexte, 500
+par exemple). Nous allons plutôt opter pour une liste (classe Liste), dont les éléments seront une structure
+}eltListe\textmd{ contenant les champs }marque\textmd{ (chaine) et }cpt\textmd{ (entier). La démarche est simple :
+lorsqu'une nouvelle marque est rencontrée, il faut ajouter un compteur dans la liste initialisé à 1 ; si la marque a
+déjà été rencontrée, il faut retrouver le compteur associé à cette marque et l'incrémenter. Un module de recherche est
+donc indispensable pour le bon fonctionnement.}}
+
+\bigskip
+
+{\sffamily
+\textbf{module} statVoitures(fichAuto : FichierEntrée de Voiture)}
+
+{\sffamily
+\ \ i, ind : entier}
+
+{\sffamily
+\ \ enr : Voiture}
+
+{\sffamily
+\ \ elt : eltListe}
+
+{\sffamily
+\ \ listeCpt : Liste<eltListe>}
+
+{
+\textsf{\ \ listeCpt~}[F0DF?]\textsf{ nouvelle Liste<eltListe>( )}}
+
+{\sffamily
+\ \ fichAuto.ouvrir( )}
+
+{
+\textsf{\ \ enr }[F0DF?]\textsf{ fichAuto.lire( )}}
+
+{\sffamily
+\ \ \textbf{tant que} NON fichAuto.EOF( ) \textbf{faire}}
+
+{
+\textsf{\textbf{\ \ \ \ }}\textsf{ind }[F0DF?]\textsf{ recherche(listeCpt, enr.marque)}}
+
+{\sffamily
+\ \ \ \ \textbf{si} ind = 0 \textbf{alors}\ \ // la marque n'a pas encore été comptée}
+
+{
+\textsf{\ \ \ \ \ \ elt.marque }[F0DF?]\textsf{ enr.marque}}
+
+{
+\textsf{\ \ \ \ \ \ elt.cpt }[F0DF?]\textsf{ 1}}
+
+{\sffamily
+\ \ \ \ \ \ listeCpt.ajouter(elt)}
+
+{\sffamily
+\ \ \ \ \textbf{sinon\ \ \ \ }\ \ // la marque est présente dans la liste}
+
+{
+\textsf{\ \ \ \ \ \ }\foreignlanguage{english}{\textsf{elt }}[F0DF?]\foreignlanguage{english}{\textsf{
+listeCpt.get(ind)}}}
+
+{
+\foreignlanguage{english}{\textsf{\ \ \ \ \ \ elt.cpt }}[F0DF?]\foreignlanguage{english}{\textsf{ elt.cpt + 1}}}
+
+{\sffamily
+\foreignlanguage{english}{\ \ \ \ \ \ }listeCpt.set(ind, elt)}
+
+{\sffamily
+\ \ \ \ \textbf{fin si}}
+
+{
+\textsf{\ \ \ \ enr }[F0DF?]\textsf{ fichAuto.lire( )}}
+
+{\sffamily
+\ \ \textbf{fin tant}}
+
+{\sffamily
+\ \ fichAuto.fermer( )}
+
+{\sffamily
+\ \ \textbf{pour }i \textbf{de} 1 \textbf{à} listeCpt.taille( ) \textbf{faire}}
+
+{\sffamily
+\ \ \ \ \textbf{écrire} listeCpt.get(i).marque, listeCpt.get(i).cpt}
+
+{\sffamily
+\ \ \textbf{fin pour}}
+
+{\sffamily\bfseries
+fin module}
+
+
+\bigskip
+
+{
+\textsf{\textbf{module}}\textsf{ recherche(liste : Liste<eltListe>, marque : chaine)
+}[F0E0?]\textsf{ entier}}
+
+{\sffamily
+\ \ // recherche dans la liste l'élément correspondant à la marque en paramètre}
+
+{\sffamily
+\ \ // et retourne sa position dans la liste, 0 s'il ne s'y trouve pas}
+
+{\sffamily
+\ \ i : entier}
+
+{\sffamily
+\ \ trouvé : booléen}
+
+{
+\textsf{\ \ trouvé }[F0DF?]\textsf{ faux}}
+
+{
+\textsf{\ \ i }[F0DF?]\textsf{ 0}}
+
+{\sffamily
+\ \ \textbf{tant que} NON trouvé ET i < liste.taille( ) \textbf{faire}}
+
+{
+\textsf{\ \ \ \ i }[F0DF?]\textsf{ i + 1}}
+
+{
+\textsf{\textbf{\ \ \ \ }}\textsf{trouvé }[F0DF?]\textsf{ liste.get(i).marque = marque}}
+
+{\sffamily\bfseries
+\ \ fin tant\ \ }
+
+{\sffamily
+\textbf{\ \ si }trouvé\textbf{ alors}}
+
+{\sffamily
+\textbf{\ \ \ \ retourner} i}
+
+{\sffamily\bfseries
+\ \ sinon}
+
+{\sffamily
+\textbf{\ \ \ \ retourner} 0}
+
+{\sffamily\bfseries
+\ \ finsi}
+
+{\sffamily\bfseries
+fin}
+
+
+\bigskip
+
+{
+Avec la classe Map, le code se simplifie considérablement : nous sommes débarassés du module de recherche, et du souci
+de connaître à quel endroit se trouve le compteur associé à une marque donnée. Les valeurs seront ici les compteurs, et
+les clés les marques de voitures. On utilise donc une Map<chaine, entier> :}
+
+
+\bigskip
+
+{\sffamily
+\textbf{module} statVoitures(FichAuto : FichierEntrée de Voiture)}
+
+{\sffamily
+\ \ enr : Voiture}
+
+{\sffamily
+\ \ i : entier}
+
+{\sffamily
+\ \ liste : Liste<chaine>}
+
+{\sffamily
+\ \ compteurs : Map <chaine, entier>}
+
+{
+\textsf{\ \ compteurs }[F0DF?]\textsf{ nouvelle Map<chaine, entier>( )}}
+
+{\sffamily
+\ \ fichAuto.ouvrir( )}
+
+{
+\textsf{\ \ enr }[F0DF?]\textsf{ fichAuto.lire( )}}
+
+{\sffamily
+\ \ \textbf{tant que} NON fichAuto.EOF( ) \textbf{faire}}
+
+{\sffamily
+\textbf{\ \ \ \ si} compteurs.contient(enr.marque) \textbf{alors }}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ }// la marque est déjà présente dans la Map}
+
+{\sffamily
+\ \ \ \ \ \ compteurs.setÉlément(enr.marque, compteurs.getValeur(enr.marque) + 1)}
+
+{\sffamily
+\ \ \ \ \textbf{sinon}}
+
+{\sffamily
+\textbf{\ \ \ \ }\ \ // la marque n'est pas encore dans la Map}
+
+{\sffamily
+\ \ \ \ \ \ compteurs.setÉlément(enr.marque, 1)}
+
+{\sffamily
+\ \ \ \ \textbf{fin si}}
+
+{
+\textsf{\ \ \ \ enr }[F0DF?]\textsf{ fichAuto.lire( )}}
+
+{\sffamily
+\ \ \textbf{fin tant}}
+
+{\sffamily
+\ \ fichAuto.fermer( )}
+
+{
+\textsf{\ \ liste }[F0DF?]\textsf{ compteurs.listeClés( )}}
+
+{\sffamily
+\ \ \textbf{pour }i \textbf{de} 1 \textbf{à} liste.taille( ) \textbf{faire}}
+
+{\sffamily
+\ \ \ \ \textbf{écrire} liste.get(i), compteurs.getValeur(liste.get(i))}
+
+{\sffamily
+\ \ \textbf{fin pour}}
+
+{\sffamily\bfseries
+fin module}
+
+\section[Implémentation]{\sffamily Implémentation}
+{
+On voit par l'exemple précédent que l'association apparaît de l'extérieur comme un ensemble non ordonné, une grande
+boîte dans laquelle on introduit les couples (clé, valeur) et de laquelle on peut les récupérer très facilement.
+Comment cela fonctionne-t-il ? Pour implémenter une association, il est bien sûr possible d'utiliser les structures
+déjà connues :}
+
+\liststyleWWviiiNumiii
+\begin{itemize}
+\item {
+un tableau (trié ou non) ou une liste dont les éléments sont les couples (clé, valeur) comme dans l'exemple des
+statistiques des marques de voitures}
+\item {
+une liste chainée (triée ou non)}
+\item {
+un arbre binaire ordonné sur les clés (voir chapitre sur les arbres)}
+\end{itemize}
+{
+Utiliser une de ces structures comme attribut de la classe reviendrait dès lors à camoufler à l'intérieur de la classe
+un algorithme de recherche tel que celui qui apparaît explicitement dans l'exemple ci-dessus, ce qui ne serait pas un
+réel progrès quant à l'efficacité.}
+
+{
+Il existe une structure particulière très efficace, nommée \textit{table de hachage}, qui utilise un tableau pour
+stocker les éléments, et la position d'un élément dans ce tableau se retrouve très rapidement en utilisant une
+\textit{fonction de hachage}.}
+
+\section[La fonction de hachage]{\sffamily La fonction de hachage}
+{
+Une \textit{fonction de} \textit{hachage} transforme une clé en un «~petit~» entier. Le but est d'obtenir par cette
+fonction (que nous noterons \textit{h}(\textit{x}) des valeurs entre 1 (ou 0) et une valeur maximale N, et qui seront
+réparties le plus uniformément possible dans cet intervalle. Le choix de la fonction de hachage dépend du type de clé
+et aussi de la taille des éléments à classer. }
+
+{
+Cependant, il est courant que l'ensemble d'arrivée de la fonction soit plus petit que l'ensemble des clés, et il est
+donc inévitable que deux clés différentes donnent le même nombre après hachage. Dans ce cas on parle de «~collision~».
+Lors du choix de la fonction de hachage, il faut \ également chercher à minimiser ces collisions, en vue d'un
+fonctionnement performant de la classe.}
+
+{\bfseries
+Exemples}
+
+\liststyleWWviiiNumiv
+\begin{itemize}
+\item {
+Prenons l'ensemble des étudiants de l'ESI, avec comme clé le numéro d'étudiant de 5 chiffres. La fonction
+\textit{h}(\textit{x}) = \textit{x} DIV 1000 ne serait pas un bon choix car elle donnerait un nombre réduit de valeurs
+(comprises actuellement entre 35 et 40), à partir d'un ensemble de plusieurs centaines d'étudiants. La fonction
+\textit{h}(\textit{x})\textit{ }=\textit{ x} MOD 100 est déjà bien meilleure, elle donnerait des valeurs entre 0 et 99.
+Il y aura bien sûr des collisions, vu que les étudiants de numéros 37156 et 38956 seraient «~hachés~» de la même
+façon.}
+\item {
+Pour les codes postaux des villes de Belgique, on pourrait prendre la fonction \textit{h}(\textit{x}) = \textit{x} DIV
+10. Elle donnerait un ensemble de valeurs entre 100 et 999 où les collisions seraient peu nombreuses (vu que la plupart
+des codes se terminent par 0).}
+\end{itemize}
+\section[La table de hachage]{\sffamily La table de hachage}
+{
+La \textit{table de hachage} est un tableau contenant les couples (clé, valeur) d'une association ; l'indice du tableau
+correspondant à un élément de clé donnée est déterminé par la fonction de hachage \textit{h}(\textit{x}). Les valeurs
+de la fonction déterminent la taille du tableau (ou vice-versa). Si la fonction de hachage donne des valeurs entre 1 et
+N, il faudra un tableau de N éléments.}
+
+{
+Pour les éléments de la table, nous définirons le type structuré \textit{générique} suivant :}
+
+{\sffamily
+\textbf{structure} Élément<K, T>}
+
+{\sffamily
+\ \ clé : K}
+
+{\sffamily
+\ \ valeur : T}
+
+{\sffamily\bfseries
+fin structure}
+
+
+\bigskip
+
+{
+Par facilité de notation, nous admettrons par la suite la notation (a, b) pour désigner une variable de ce type, avec a
+et b comme valeurs respectives des champs clé et valeur.}
+
+{
+La table de hachage sera déclarée comme suit :}
+
+{\sffamily
+table : tableau [1 à n] de Élément<K, T>}
+
+{
+Pour stocker le couple (clé, valeur), nous écrirons donc : }
+
+{\centering
+table[\textit{h}(clé)] $\leftarrow $ (clé, valeur)
+\par}
+
+
+\bigskip
+
+{
+et pour trouver la valeur associée à une clé :}
+
+
+\bigskip
+
+{\centering
+val $\leftarrow $ table[\textit{h}(clé)].valeur
+\par}
+
+
+\bigskip
+
+{
+\textit{Exemple}. Dans cet exemple, seules les clés apparaissent, nous faisons abstraction des valeurs. Prenons une
+table de capacité 10, pour y stocker des éléments déterminés par des clés à valeurs entières. La fonction de hachage
+est \textit{h}(\textit{x}) = \textit{x} MOD 10 + 1. Si les valeurs des clés à introduire dans la table sont 12, 17, 29
+et 33 on aura la configuration suivante :}
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}}
+\centering{\itshape 1} &
+\centering{\itshape 2} &
+\centering{\itshape 3} &
+\centering{\itshape 4} &
+\centering{\itshape 5} &
+\centering{\itshape 6} &
+\centering{\itshape 7} &
+\centering{\itshape 8} &
+\centering{\itshape 9} &
+\centering\arraybslash{\itshape 10}\\\hline
+\multicolumn{1}{|m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 12}} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 33}} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 17}} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering\arraybslash{ 29}}\\\hline
+\end{supertabular}
+\end{center}
+{
+Nous voyons aussi que l'occupation du tableau est irrégulière. Il faut dès lors pouvoir reconnaître les cases vides des
+cases occupées (par exemple en y mettant une valeur aberrante de la clé). Que\textcolor{black}{ se passerait-il si on
+veut introduire la clé de valeur 42 ? Elle devrait occuper la même case que 12, ce qui n'est pas possible. Nous sommes
+dans le cas d'une «~collision~» pour lequel nous envisageons deux solutions.}}
+
+\section[Gestion des collisions]{\sffamily Gestion des collisions}
+{
+Il y a \textit{collision} entre deux clés k\textsubscript{1} et k\textsubscript{2} lorsque
+\textit{h}(\textit{k}\textsubscript{1}) = \textit{h}(\textit{k}\textsubscript{2}). Que faire dans ces cas là ? Nous
+décrivons deux techniques courantes : l'«~adressage ouvert~» et le «~chainage~».}
+
+\subsection[L{}'adressage ouvert]{\sffamily\itshape L'adressage ouvert}
+{
+L'idée est la suivante : lorsqu'on veut utiliser un emplacement de la table et que celui-ci est occupé, on va voir
+ailleurs. Dans la technique la plus simple, on va simplement continuer le parcours du tableau, à partir de la position
+de départ, à la recherche d'un «~trou~». Pour la recherche, on procède de même; la fonction de hachage nous indique où
+commencer à chercher et on poursuit jusqu'à trouver l'élément ou un «~trou~».}
+
+{
+Poursuivons l'exemple ci-dessus : la clé 42 devrait occuper la case d'indice 3. Comme celle-ci est occupée, on parcourt
+le tableau jusqu'à la prochaine case libre, celle d'indice 5 et on y place l'élément :}
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}}
+\centering{\itshape 1} &
+\centering{\itshape 2} &
+\centering{\itshape 3} &
+\centering{\itshape 4} &
+\centering{\itshape 5} &
+\centering{\itshape 6} &
+\centering{\itshape 7} &
+\centering{\itshape 8} &
+\centering{\itshape 9} &
+\centering\arraybslash{\itshape 10}\\\hline
+\multicolumn{1}{|m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 12}} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 33}} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 42}} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 17}} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering\arraybslash{ 29}}\\\hline
+\end{supertabular}
+\end{center}
+{
+Ce parcours de recherche est «~circulaire~» : arrivé à la dernière case, on revient au début. Ainsi, la clé 39 qui ne
+peut pas être mise à sa place «~normale~» (occupée par 29) sera placée en première position : }
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}}
+\centering{\itshape 1} &
+\centering{\itshape 2} &
+\centering{\itshape 3} &
+\centering{\itshape 4} &
+\centering{\itshape 5} &
+\centering{\itshape 6} &
+\centering{\itshape 7} &
+\centering{\itshape 8} &
+\centering{\itshape 9} &
+\centering\arraybslash{\itshape 10}\\\hline
+\multicolumn{1}{|m{0.999cm}|}{\centering{ 39}} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 12}} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 33}} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 42}} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 17}} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering\arraybslash{ 29}}\\\hline
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+{
+L'exemple peut laisser perplexe vu la petite taille du tableau ; si le tableau a une taille suffisante, on peut imaginer
+que la clé cherchée ne sera jamais très loin de la position donnée par \textit{h}(\textit{x})~de telle façon que la
+longueur du parcours requis peut être considéré comme négligeable.}
+
+{
+Noter que la suppression est plus délicate à mettre en {\oe}uvre : il ne suffit pas de supprimer simplement la clé dans
+la case donnée par la fonction de hachage, car s'il y a eu une collision, on ne retrouverait plus l'autre valeur de
+clé. Il faut donc reboucher le trou avec la dernière clé donnant la même valeur de hachage. Ainsi, dans l'exemple, si
+on supprime 12, il faut déménager 42 dans la case d'indice 3 :}
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}}
+\centering{\itshape 1} &
+\centering{\itshape 2} &
+\centering{\itshape 3} &
+\centering{\itshape 4} &
+\centering{\itshape 5} &
+\centering{\itshape 6} &
+\centering{\itshape 7} &
+\centering{\itshape 8} &
+\centering{\itshape 9} &
+\centering\arraybslash{\itshape 10}\\\hline
+\multicolumn{1}{|m{0.999cm}|}{\centering{ 39}} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 42}} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 33}} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 17}} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering\arraybslash{ 29}}\\\hline
+\end{supertabular}
+\end{center}
+{
+Notons que la table a aussi une capacité maximale, on ne pourra pas y mettre plus de clés que sa taille. Cette technique
+est donc assez délicate mais intéressante lorsque les allocations dynamiques sont impossibles ou coûteuses. Si elles
+sont possibles, on utilisera plutôt la seconde technique :}
+
+\subsection[]{\sffamily\itshape }
+\subsection[Le chainage]{\sffamily\itshape Le chainage}
+{
+Avec cette technique, une entrée de la table ne contient pas un couple (clé, valeur) mais une liste chainée de couples
+(clé, valeur) : précisément tous les couples dont les clés ont la même valeur de hachage.}
+
+{\sffamily
+table : tableau [1 à n] de Listechainée<Élément<K, T>{\textgreater}}
+
+{
+Pour rechercher un élément, il suffit à présent de parcourir la liste chainée dont l'accès se trouve dans la case
+d'indice \textit{h}(\textit{x}). L'avantage est l'aisance de l'implémentation, moins délicate que l'adressage ouvert,
+et de plus, il n'y a pas de limitation (théorique) au nombre de clés. Toutefois, il faut veiller à prendre un tableau
+assez grand pour que la taille des listes reste réduite, le but étant de minimiser les parcours.}
+
+{
+Avec la technique de chainage, l'introduction des clés 12, 17, 29, 33, 42 et 39 dans la table donnerait la configuration
+suivante :}
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}m{0.999cm}}
+\centering{\itshape 1} &
+\centering{\itshape 2} &
+\centering{\itshape 3} &
+\centering{\itshape 4} &
+\centering{\itshape 5} &
+\centering{\itshape 6} &
+\centering{\itshape 7} &
+\centering{\itshape 8} &
+\centering{\itshape 9} &
+\centering\arraybslash{\itshape 10}\\\hline
+\multicolumn{1}{|m{0.999cm}|}{\centering{ rien}} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ rien}} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ rien}} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ rien}} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ rien}} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ rien}} &
+\multicolumn{1}{m{0.999cm}|}{~
+}\\\hline
+~
+ &
+~
+ &
+\centering{ $\downarrow $} &
+\centering{ $\downarrow $} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ $\downarrow $} &
+~
+ &
+\centering\arraybslash{ $\downarrow $}\\\hhline{~~--~~~-~-}
+~
+ &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 42}} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 33}} &
+~
+ &
+~
+ &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 17}} &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering\arraybslash{ 39}}\\\hhline{~~--~~~-~-}
+~
+ &
+~
+ &
+\centering{ $\downarrow $} &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+\centering\arraybslash{ $\downarrow $}\\\hhline{~~-~~~~~~-}
+~
+ &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering{ 12}} &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+\multicolumn{1}{m{0.999cm}|}{~
+} &
+\multicolumn{1}{m{0.999cm}|}{\centering\arraybslash{ 29}}\\\hhline{~~-~~~~~~-}
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+{
+(Il est évident que les ajouts se feront toujours en tête de liste).}
+
+\section[Efficacité de la classe Map]{\sffamily Efficacité de la classe Map}
+{
+Comparons l'efficacité de plusieurs implémentations de la classe Map : le tableau (ordonné), la liste (non ordonnée),
+l'arbre binaire (ordonné) ou la table de hachage.}
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{3.3669999cm}|m{1.9679999cm}|m{1.8cm}|m{2.34cm}|}
+\hhline{~---}
+\multicolumn{1}{m{3.3669999cm}|}{~
+} &
+\centering{\bfseries recherche} &
+\centering{\bfseries ajout} &
+\centering\arraybslash{\bfseries suppression}\\\hline
+{\bfseries tableau} &
+\centering{ O(log\textsubscript{2 }\textit{n})} &
+\centering{ O(\textit{n})} &
+\centering\arraybslash{ O(\textit{n})}\\\hline
+{\bfseries liste chainée} &
+\centering{ O(\textit{n})} &
+\centering{ O(\textit{n})} &
+\centering\arraybslash{ O(\textit{n})}\\\hline
+{\bfseries arbre} &
+\centering{ O(log\textsubscript{2 }\textit{n})} &
+\centering{ O(log\textsubscript{2 }\textit{n})} &
+\centering\arraybslash{ O(log\textsubscript{2 }\textit{n})}\\\hline
+{\bfseries table de hachage} &
+\centering{ O(1)} &
+\centering{ O(1)} &
+\centering\arraybslash{ O(1)}\\\hline
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+
+\bigskip
+
+{\bfseries
+Remarques}
+
+\liststyleWWviiiNumiv
+\begin{itemize}
+\item {
+La table de hachage est particulièrement efficace mais ses performances se dégradent si la table est fort remplie à
+cause du nombre croissant de collisions, inconvénient que n'a pas l'arbre.}
+\item {
+L'arbre sera étudié plus loin dans le cours ; signalons déjà que c'est une structure qui a aussi l'avantage de permettre
+de donner facilement les éléments dans l'ordre des clés ce que ne permet pas la table de hachage.}
+\end{itemize}
+\section[Exercices]{\sffamily Exercices}
+\section[Ex. 1. Hachage de clés entières]{\sffamily Ex. 1. Hachage de clés entières}
+{
+\textstyleEmphasis{\textup{On stocke des valeurs associées à des clés entières dans une table de hachage de capacité 15.
+La fonction de hachage est
+}}\textstyleEmphasis{h}\textstyleEmphasis{\textup{(}}\textstyleEmphasis{x}\textstyleEmphasis{\textup{) =
+}}\textstyleEmphasis{x}\textstyleEmphasis{\textup{ MOD 15 + 1. Pour les deux }}\textstyleEmphasis{techniques
+d'implémentations présentées au cours (adressage ouvert et chainage), représenter par un schéma l'état de la table
+après insertion dans l'ordre des clés suivantes : }}
+
+{\centering
+\textstyleEmphasis{\textup{17, 22, 36, 55, 21, 152, 64, 63, 10, 32}}
+\par}
+
+{
+\textstyleEmphasis{\textup{\ \ \ \ \ }}\textstyleEmphasis{\textup{Donner ensuite l'état de la table après suppression
+dans l'ordre des clé}}\textstyleEmphasis{s 55, 36 et 152.}}
+
+\section[Ex. 2. Hachage de chaines]{\sffamily Ex. 2. Hachage de chaines}
+{
+On stocke des chaines de caractères dans une table de hachage par la technique de l'adressage ouvert. La table permet de
+stocker 13 éléments et la fonction de hachage est donnée par la formule \textit{h}(\textit{x}) =
+(ordreAlphabet(initiale(\textit{x})) + 1) DIV 2 ou ordreAlphabet(car) est la position dans l'alphabet du caractère car,
+et initiale(chaine) est le premier caractère de la chaine. }
+
+{
+Représenter le contenu de la table après exécution dans l'ordre des actions suivantes : }
+
+\liststyleWWviiiNumxxiv
+\begin{itemize}
+\item {
+on ajoute «~André~», «~Edouard~», «~Francis~», «~Fabien~», «~Gilles~» et «~Geoffrey~»}
+\item {
+on retire «~Francis~» et «~Gilles~» }
+\item {
+on rajoute «~Arnaud~» et «~Francis~».}
+\end{itemize}
+\section[Ex. 3. Les membres]{\sffamily Ex. 3. Les membres}
+{
+Un fichier Membres contient la liste des membres d'une association, classés par ordre alphabétique sur leur nom. Chaque
+enregistrement est une structure composée des champs Nom, Prénom, Rue, Numéro, Ville, CodePostal, DateNais.}
+
+{
+Ecrire un algorithme qui donne le nom de la ville où habite le maximum de membres de l'association.}
+
+\section[Ex. 4. Map avec chainage]{\sffamily Ex. 4. Map avec chainage}
+{
+Détailler l'implémentation de la classe Map à l'aide d'une table de hachage fonctionnant avec la technique du chainage.
+On considère que la fonction de hachage \textit{h}(\textit{x}) donne des valeurs toujours comprises entre 1 et 1000.}
+
+\section[Ex. 5. Gestion de stock]{\sffamily Ex. 5. Gestion de stock}
+{
+Soient la classe Article et la structure Achat définies comme suit :}
+
+
+\bigskip
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{\ \ classe} Article}
+
+
+\bigskip
+
+{\sffamily\bfseries
+\ \ \ \ \ \ privé :}
+
+{\sffamily
+code : entier}
+
+{\sffamily
+libellé : chaine}
+
+{\sffamily
+prix : entier}
+
+{\sffamily
+quantité : entier}
+
+
+\bigskip
+
+
+\bigskip
+
+
+\bigskip
+
+{\sffamily\bfseries
+\ \ \ \ \ \ public :}
+
+{\sffamily
+\textbf{constructeur} Article (unCode : entier, unLibellé : chaine, unPrix : entier, }
+
+{\sffamily
+uneQuantité : entier)}
+
+{\sffamily
+\textbf{méthode} getLibellé() $\rightarrow $ chaine}
+
+{\sffamily
+\textbf{méthode} getCode() $\rightarrow $ entier}
+
+{\sffamily
+\textbf{méthode} getPrix() $\rightarrow $ entier}
+
+{\sffamily
+\textbf{méthode} getQuantité() $\rightarrow $ entier}
+
+{\sffamily
+\textbf{méthode} addQuantité(q : entier)}
+
+{\sffamily
+\textbf{méthode} setPrix(p : entier)}
+
+{\sffamily\bfseries
+fin classe}
+
+
+\bigskip
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{\ \ structure} Achat}
+
+{\sffamily
+codeArticle : entier}
+
+{\sffamily
+quantité : entier}
+
+{\sffamily\bfseries
+\ \ \ \ \ \  fin structure}
+
+
+\bigskip
+
+{
+Définissez la classe \textbf{Stock} pour qu'elle n'offre que les méthodes suivantes que vous implémenterez. Veillez à
+choisir une implémentation des données assurant de bonnes performances.}
+
+
+\bigskip
+
+{\sffamily
+\textbf{méthode }majStock(articles : Liste<Article>) }
+
+{\sffamily
+// articles reprend les articles de réapprovisionnement du stock 
+// (nouveaux articles et/ou articles existants)}
+
+{\sffamily
+\textbf{méthode} getQuantité(code : entier) $\rightarrow $ entier}
+
+{\sffamily
+\textbf{méthode} getLibellé(code : entier) $\rightarrow $ chaine}
+
+{\sffamily
+\textbf{méthode} getPrix(code : entier) $\rightarrow $ entier}
+
+{\sffamily
+\textbf{méthode }getCodesArticles() $\rightarrow $ Liste<entier>}
+
+{\sffamily
+\textbf{méthode} évalue(panier : Liste<Achat>) $\rightarrow $ entier // retourne le prix total du
+panier}
+
+
+\bigskip
+
+
+\bigskip
+
+\clearpage
+\bigskip
+
+\begin{flushleft}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{10.14cm}m{5.8430004cm}}
+{\sffamily\bfseries Chapitre 5~-- La récursivité}
+
+~
+
+{\itshape «~Pour comprendre le principe de récursivité, il faut d'abord comprendre le principe de
+récursivité~»}
+
+~
+ &
+\raggedleft\arraybslash  \includegraphics[width=4.094cm,height=3.519cm]{a2012Logique2eme-img015.png} \\
+\end{supertabular}
+\end{flushleft}
+
+\bigskip
+
+\section[Introduction]{\sffamily Introduction}
+{
+Une procédure est dite \textbf{récursive} lorsque dans sa description, une des étapes de cette procédure est la
+procédure elle-même. Des termes synonymes de la récursivité sont la \textbf{récurrence} ou l'\textbf{auto-référence}.}
+
+
+\bigskip
+
+{
+\textit{La récursivité est une démarche qui consiste à faire référence à ce qui fait l'objet de la démarche, ainsi c'est
+le fait de décrire un processus dépendant de données en faisant appel à ce même processus sur d'autres données plus
+«simples», de montrer une image contenant des images similaires, de définir un concept en invoquant le même concept.}
+(Wikipédia)}
+
+
+\bigskip
+
+{
+Les illustrations ci-dessous sont des exemples célèbres de dessins récursifs :}
+
+{
+ \includegraphics[width=5.41cm,height=5.41cm]{a2012Logique2eme-img016.jpg} 
+\ \ \ \ \ \ \ \ \ \href{http://upload.wikimedia.org/wikipedia/commons/6/62/Droste.jpg}{
+\includegraphics[width=3.328cm,height=5.098cm]{a2012Logique2eme-img017.jpg} } \ \ \ \ \ \ \ \ \ 
+\includegraphics[width=5.089cm,height=5.052cm]{a2012Logique2eme-img018.png} }
+
+
+\bigskip
+
+{
+La \textit{vache qui rit} qui orne la fameuse boîte de fromage porte des boucles d'oreilles en forme de boîtes de
+fromage identiques au dessin entier. Il en est de même pour le dessin de la boîte de cacao \textit{Droste} : sur le
+plateau porté par la dame apparaît en plus petit la même boîte de cacao. Dans le troisième dessin, chaque carré
+contient un carré plus petit inscrit dans le carré précédent~de telle sorte que l'image formée à partir du
+3\textsuperscript{ème} carré est identique au carré de départ, mais réduite de 50\%. Chacun de ces dessins
+s'\textit{auto-contient} donc à une échelle plus petite. Il en est de même pour le dessin fractal à droite du titre de
+ce chapitre, il s'agit du \textit{triangle de Sierpinski} formé dans chaque coin de triangles plus petits mais pareils
+au triangle entier. }
+
+\section[Définitions récursives]{\sffamily Définitions récursives}
+{
+Les dessins ci-dessus offrent des exemples de \textit{récursivité infinie}. En mathématique et en informatique, la
+récursivité définit plutôt un processus dont la description se décompose en un (ou plusieurs) cas de base, et un
+ensemble de régles réduisant les autres cas aux cas de base par l'exécution d'un nombre fini d'étapes.}
+
+
+\bigskip
+
+{
+Certains concepts peuvent se définir récursivement, à condition que la définition contienne une clause d'évaluation
+immédiate sans appel récursif. Prenons par exemple la formule \textit{récursive} de la factorielle :}
+
+{\centering
+\textit{n} ! = \textit{n}* (\textit{n} -- 1) !
+\par}
+
+
+\bigskip
+
+{
+Cette formule est incomplète si on ne définit pas le cas initial 0 ! = 1. A partir du cas de base et de la formule
+récursive, on peut calculer la factorielle de n'importe quel entier.}
+
+
+\bigskip
+
+{
+Parmi les autres exemples rencontrés au cours de mathématique, citons la formule récursive des coefficients binomiaux :}
+
+
+\bigskip
+
+{\centering
+ $C_n^p=C_{n-1}^{p-1}+C_{n-1}^p$\textsubscript{\ \ } si 0 < \textit{p} < \textit{n}
+\par}
+
+
+\bigskip
+
+{
+avec les cas de bases :  $C_n^0=1$ et  $C_n^n=1$. Cette définition permet de reconstruire facilement le triangle de
+Pascal : }
+
+{\centering  \includegraphics[width=4.724cm,height=4.651cm]{a2012Logique2eme-img019.jpg} \par}
+
+\bigskip
+
+{
+Noter que le calcul récursif est plus commode d'utilisation que la formule «~directe~»~faisant intervenir les
+factorielles :}
+
+
+\bigskip
+
+\begin{equation*}
+C_n^p=\frac{n!}{(n-p)!p!}
+\end{equation*}
+
+\bigskip
+
+{
+Un \ troisième exemple est la formule récursive pour calculer les nombres de Fibonacci :}
+
+
+\bigskip
+
+{\centering
+\textit{F}\textit{\textsubscript{n}} = \textit{F}\textit{\textsubscript{n }}\textsubscript{{}-- 1} +
+\textit{F}\textit{\textsubscript{n}}\textsubscript{ -- 2} 
+\par}
+
+
+\bigskip
+
+{
+avec les cas initiaux \textit{F}\textsubscript{0} = 1 et \textit{F}\textsubscript{1} = 1. Cette formule récursive est
+bien plus maniable la formule donnant «~directement~» le \textit{n}{}-ème nombre de Fibonaci :}
+
+
+\bigskip
+
+{\centering  \includegraphics[width=9.631cm,height=1.614cm]{a2012Logique2eme-img020.png} \par}
+
+\bigskip
+
+{
+On peut aussi définir de façon récursive certaines structures courantes en informatique, comme le montre par
+exemple~cette définition récursive de la liste chainée :}
+
+
+\bigskip
+
+{\itshape
+une liste chainée est un ensemble soit vide, soit composé d'un élément auquel est attaché une liste chainée.}
+
+
+\bigskip
+
+{
+Cette définition est intelligible par le fait qu'on sous-entend que la liste chainée à laquelle la définition fait
+référence n'est plus identique à la première, mais plus petite d'un élément, et éventuellement qu'elle peut se terminer
+(ensemble vide).}
+
+
+\bigskip
+
+{
+On peut de façon semblable définir une chaine de caractères :}
+
+
+\bigskip
+
+{\itshape
+une chaine de caractères est un ensemble soit vide, soit composé d'un caractère concaténé à une chaine de caractères.}
+
+\section[Algorithme récursif]{\sffamily Algorithme récursif}
+{
+En informatique, un \textbf{algorithme récursif} est un algorithme qui, lors de son exécution, fait appel une ou
+plusieurs fois à lui-même. Ainsi, dans un module récursif, nous pourrons écrire parmi les instructions l'appel à ce
+module lui-même :}
+
+
+\bigskip
+
+{\sffamily
+\textbf{module} récursif({\dots}) }
+
+{\sffamily
+\ \ \ \ \ \ // instructions}
+
+{\sffamily
+\ \ \ \ \ récursif({\dots})}
+
+{\sffamily
+\ \ \ \ \ // instructions}
+
+{\sffamily\bfseries
+fin module}
+
+
+\bigskip
+
+{
+Si cette situation peut surprendre au premier abord, elle n'est pourtant pas très différente de la situation suivante,
+appelée \textit{récursivité croisée~}:}
+
+
+\bigskip
+
+{\sffamily
+\textbf{module} premier({\dots}) \ \ \ \ \ \ \ \ \textbf{module} second({\dots})}
+
+{\sffamily
+\ \ \ \ \ \ // instructions\ \ \ \ \ \ \ \ \ \  \ \ \ \ // instructions}
+
+{\sffamily
+\ \ \ \ \ second({\dots})\ \ \ \ \ \ \ \ \ \  \ \ \ \ premier({\dots})}
+
+{\sffamily
+\ \ \ \ \ \ // instructions\ \ \ \ \ \ \ \ \ \  \ \ \ \ // instructions}
+
+{\sffamily\bfseries
+fin module\ \ \ \ \ \ \ \ \ \ fin module}
+
+
+\bigskip
+
+{
+Chaque module fait appel à l'autre, et si on recopie le code du module second à la place de son appel dans premier, on
+obtient la même situation que dans le module récursif qui précède. Néanmoins, en absence de paramètres, ces deux
+situations génèrent un processus infini, et pire, une saturation de la mémoire ! En effet, pour pouvoir fonctionner,
+chaque appel du module génère un nouvel ensemble des variables utilisées dans le module. La situation est donc très
+différente d'une boucle infinie du type \textit{tant que} ou \textit{faire jusqu'à ce que}.}
+
+
+\bigskip
+
+{
+Pour ne pas tomber dans ce processus sans fond, un algorithme récursif bien écrit doit forcément posséder un (ou
+plusieurs) paramètre(s), et contenir une structure alternative qui conduit à une clause d'évaluation immédiate sans
+appel récursif pour une (ou plusieurs) valeur(s) initiale(s) des paramètre(s). La forme générale est la suivante :}
+
+
+\bigskip
+
+{\sffamily
+\textbf{module} récursif(paramètre) }
+
+{\sffamily
+\ \ \ \ \ \textbf{si }paramètre = valeur initiale \textbf{alors\ \ \ \ }// il peut y avoir plusieurs cas initiaux}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ // instructions sans appel récursif}
+
+{\sffamily
+\ \ \ \ \ \textbf{sinon}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ // instructions menant à des valeurs différentes du paramètre, et après un nombre fini}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ // d'appels récursifs aux valeurs initiales}
+
+{\sffamily
+\ \ \ \ \ \textbf{fin si}}
+
+{\sffamily\bfseries
+fin module}
+
+\section[Exemples classiques]{\sffamily Exemples classiques}
+{
+Dans ce paragraphe, nous présentons quelques grands classiques de la programmation récursive.}
+
+
+\bigskip
+
+{\sffamily\bfseries\itshape
+La factorielle}
+
+
+\bigskip
+
+{
+Le module récursif calculant la factorielle d'un entier positif est issu directement de la définition récursive rappelée
+ci-dessus :}
+
+
+\bigskip
+
+{
+\textsf{\textbf{module}}\textsf{ factorielle(n$\downarrow $ : entier) }[F0E0?]\textsf{ entier}}
+
+{\sffamily
+\ \ \ \ \ \textbf{si }n = 0\textbf{ alors}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ retourner 1}
+
+{\sffamily
+\ \ \ \ \ \textbf{sinon}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ retourner n*factorielle(n -- 1)}
+
+{\sffamily
+\ \ \ \ \ \textbf{fin si}}
+
+{\sffamily\bfseries
+fin module}
+
+
+\bigskip
+
+{
+Comment cela fonctionne-t-il ? Par exemple, si le module est appelé avec la valeur 3 du paramètre, il doit calculer 3
+fois la factorielle de 2. Le calcul est donc mis en attente jusqu'à ce que la factorielle de 2 soit connue ; et il en
+est de même pour le calcul de factorielle de 2, qui appelle la factorielle de 1 qui à son tour appelle la factorielle
+de 0. A ce moment, la valeur 1 est retournée, et les renvois se font en cascade jusqu'au premier appel qui peut enfin
+retourner la valeur 6.}
+
+
+\bigskip
+
+{\centering  \includegraphics[width=8.902cm,height=4.159cm]{a2012Logique2eme-img021.jpg} \par}
+
+\bigskip
+
+{\sffamily\bfseries\itshape
+\foreignlanguage{ngerman}{Les t}ours de Hanoï}
+
+
+\bigskip
+
+{
+Il s'agit d'un jeu de réflexion consistant à déplacer une tour formée de \textit{n} disques de diamètres différents. La
+tour qui se trouve sur un socle de départ doit être reconstruite sur un socle d'arrivée, en utilisant un socle
+intermédiaire, en en respectant les règles suivantes :}
+
+
+\bigskip
+
+\liststyleWWviiiNumxviii
+\begin{itemize}
+\item {
+on ne peut déplacer qu'un disque à la fois}
+\item {
+on ne peut jamais placer un disque sur un autre disque de diamètre plus grand}
+\end{itemize}
+
+\bigskip
+
+{\centering  \includegraphics[width=14.002cm,height=3cm]{a2012Logique2eme-img022.jpg} \par}
+
+\bigskip
+
+{
+On voudrait écrire un algorithme qui affiche la liste des déplacements des disques qui conduisent à la reconstruction de
+la tour. La récursivité permet de décrire très simplement la marche à suivre : supposons qu'on sache comment
+reconstituer une tour de n-1 disques, la reconstitution d'une tour de \textit{n} disques est alors un jeu d'enfant et
+s'exécute en 3 étapes :}
+
+
+\bigskip
+
+\liststyleWWviiiNumviii
+\begin{itemize}
+\item {
+reconstituer la tour formée par les \textit{n }{}-- 1 disques les plus petits du socle de départ vers le socle
+intermédiaire (en utilisant le socle d'arrivée comme socle intermédiaire)}
+\end{itemize}
+
+\bigskip
+
+{\centering  \includegraphics[width=6.692cm,height=2.99cm]{a2012Logique2eme-img023.jpg} \par}
+
+\bigskip
+
+\liststyleWWviiiNumviii
+\begin{itemize}
+\item {
+déplacer le disque le plus grand du socle de départ vers le socle d'arrivée}
+\end{itemize}
+
+\bigskip
+
+{\centering  \includegraphics[width=6.668cm,height=3cm]{a2012Logique2eme-img024.jpg} \par}
+\liststyleWWviiiNumviii
+\begin{itemize}
+\item {
+reconstituer la tour formée par les \textit{n} -- 1 disques les plus petits du socle intermédiaire vers le socle
+d'arrivée (en utilisant cette fois-ci le socle de départ comme socle intermédiaire)}
+\end{itemize}
+{\centering  \includegraphics[width=6.703cm,height=3cm]{a2012Logique2eme-img025.jpg} \par}
+{
+Cette démarche conduit au code suivant~(les socles sont déclarés comme caractères, on peut leur donner des noms `A', `B'
+et `C'par exemple) :}
+
+
+\bigskip
+
+{\sffamily
+\textbf{module} Hanoï(n$\downarrow $ : entier, départ$\downarrow $, arrivée$\downarrow $, intermédiaire$\downarrow $ :
+caractères)}
+
+{\sffamily
+\ \ \ \ \ \textbf{si }n > 0\textbf{ alors}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ Hanoï(n -- 1, départ, intermédiaire, arrivée)}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \textbf{écrire} «~déplacer le disque de taille~», n «~du socle~», départ, «~vers le socle~»,
+arrivée}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ Hanoï(n -- 1, intermédiaire, arrivée, départ)}
+
+{\sffamily
+\ \ \ \ \ \textbf{fin si}}
+
+{\sffamily\bfseries
+fin module}
+
+
+\bigskip
+
+{\sffamily\bfseries\itshape
+Le tri Quicksort}
+
+
+\bigskip
+
+{
+Il s'agit -- comme son nom l'indique -- d'une technique de \textit{tri rapide} des éléments d'un tableau. L'idée est
+relativement simple : on choisit d'abord un élément pivot (aléatoirement ou de façon déterminée ; en pratique, c'est
+l'élément du milieu). On réarrange ensuite -- par un nombre minimum de déplacements -- le tableau de façon à le
+partager en deux sous-tableaux : à gauche les éléments inférieurs au pivot, et à droite les éléments supérieurs au
+pivot. Il suffit ensuite de réappliquer l'algorithme de façon récursive à chacun des sous-tableaux obtenus. Lorsque la
+taille d'un sous-tableau est inférieure à 2, il n'y a alors plus rien à trier.}
+
+
+\bigskip
+
+{
+Montrons le fonctionnement de l'algorithme sur un exemple. Pour le tableau suivant, le pivot sera le
+5\textsuperscript{ème} élément, de valeur 6~}
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{1.171cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.232cm}|}
+\hline
+\centering{\sffamily 4} &
+\centering{\sffamily 3} &
+\centering{\sffamily 8} &
+\centering{\sffamily 9} &
+\centering{\sffamily 6} &
+\centering{\sffamily 3} &
+\centering{\sffamily 7} &
+\centering{\sffamily 1} &
+\centering{\sffamily 5} &
+\centering\arraybslash{\sffamily 3}\\\hline
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+{
+\foreignlanguage{french}{Le réarrangement se fait en échangeant le premier élément supérieur ou égal au pivot (en
+partant de la gauche) avec le premier élément inférieur ou égal au pivot (en partant de la droite) :} }
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{1.171cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.232cm}|}
+\hline
+\centering{\sffamily 4} &
+\centering{\sffamily 3} &
+\centering{\sffamily 8} &
+\centering{\sffamily 9} &
+\centering{\sffamily 6} &
+\centering{\sffamily 3} &
+\centering{\sffamily 7} &
+\centering{\sffamily 1} &
+\centering{\sffamily 5} &
+\centering\arraybslash{\sffamily 3}\\\hline
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+{
+ce qui donne :}
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{1.171cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.232cm}|}
+\hline
+\centering{\sffamily 4} &
+\centering{\sffamily 3} &
+\centering{\sffamily 3} &
+\centering{\sffamily 9} &
+\centering{\sffamily 6} &
+\centering{\sffamily 3} &
+\centering{\sffamily 7} &
+\centering{\sffamily 1} &
+\centering{\sffamily 5} &
+\centering\arraybslash{\sffamily 8}\\\hline
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+{
+On recommence ceci jusqu'à ce que les indices de recherche \textit{gauche} et \textit{droite} se rencontrent ; on
+obtient ainsi les étapes suivantes :}
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{1.171cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.232cm}|}
+\hline
+\centering{\sffamily 4} &
+\centering{\sffamily 3} &
+\centering{\sffamily 3} &
+\centering{\sffamily 5} &
+\centering{\sffamily 6} &
+\centering{\sffamily 3} &
+\centering{\sffamily 7} &
+\centering{\sffamily 1} &
+\centering{\sffamily 9} &
+\centering\arraybslash{\sffamily 8}\\\hline
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{1.171cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.232cm}|}
+\hline
+\centering{\sffamily 4} &
+\centering{\sffamily 3} &
+\centering{\sffamily 3} &
+\centering{\sffamily 5} &
+\centering{\sffamily 1} &
+\centering{\sffamily 3} &
+\centering{\sffamily 7} &
+\centering{\sffamily 6} &
+\centering{\sffamily 9} &
+\centering\arraybslash{\sffamily 8}\\\hline
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{1.171cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.206cm}|m{1.232cm}|}
+\hline
+\centering{\sffamily 4} &
+\centering{\sffamily 3} &
+\centering{\sffamily 3} &
+\centering{\sffamily 5} &
+\centering{\sffamily 1} &
+\centering{\sffamily 3} &
+\centering{\sffamily 6} &
+\centering{\sffamily 7} &
+\centering{\sffamily 9} &
+\centering\arraybslash{\sffamily 8}\\\hline
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+{
+On reommence alors cette procédure dans chacun des 2 sous-tableaux obtenus, dans l'exemple celui formé par les 7
+premiers éléments, et celui formé par les 3 derniers. L'algorithme correspondant est le suivant :}
+
+
+\bigskip
+
+{\sffamily
+\textbf{module} Quicksort(tab$\downarrow \uparrow $ : tableau[1 à n] de T, bInf$\downarrow $, bSup$\downarrow $ :
+entiers)}
+
+{\sffamily
+\ \ \ \ \ gauche, droite, pivot : entiers}
+
+{\sffamily
+\ \ \ \ \ \textbf{si }bInf < bSup\textbf{ alors}}
+
+{
+\foreignlanguage{french}{\textsf{\ \ \ \ \ \ \ \ \ \ }}\foreignlanguage{english}{\textsf{pivot
+}}\foreignlanguage{french}{[F0DF?]}\foreignlanguage{english}{\textsf{ tab[(bInf + bSup) DIV 2]}}}
+
+{
+\foreignlanguage{english}{\textsf{\ \ \ \ \ \ \ \ \ \ }}\foreignlanguage{french}{\textsf{gauche
+}}\foreignlanguage{english}{[F0DF?]}\foreignlanguage{french}{\textsf{ bInf}}}
+
+{
+\foreignlanguage{french}{\textsf{\ \ \ \ \ \ \ \ \ \ }}\foreignlanguage{french}{\textsf{droite
+}}\foreignlanguage{english}{[F0DF?]}\foreignlanguage{french}{\textsf{ bSup}}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \textbf{faire}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textbf{tant que} tab[gauche] < pivot \textbf{faire}}
+
+{
+\textsf{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textsf{gauche }[F0DF?]\textsf{ gauche + 1}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textbf{fin tant}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textbf{tant que} tab[droite] > pivot \textbf{faire}}
+
+{
+\textsf{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textsf{droite }[F0DF?]\textsf{ droite -- 1}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textbf{fin tant}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textbf{si} gauche < droite \textbf{alors}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ swap(tab[gauche], tab[droite])\ \ // échange des deux éléments}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textbf{fin si}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \textbf{jusqu'à ce que} gauche ${\geq}$ droite}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }Quicksort(tab, bInf, gauche -- 1)}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }Quicksort(tab, droite \ + 1, bSup)}
+
+{\sffamily
+\ \ \ \ \ \textbf{fin si}}
+
+{\sffamily\bfseries
+fin module}
+
+\section[Exercices]{\sffamily Exercices}
+{\itshape
+Dans les exercices suivants, il faudra parfois écrire un «~module façade~», c'est-à-dire un module initial non récursif
+dans lequel les paramètres sont initialisés et qui appelle la première fois l'algorithme récursif. Il est intéressant
+aussi de comparer chaque problème avec sa solution itérative -- lorsqu'elle existe -- et de s'interroger sur la
+solution la plus efficace.}
+
+\section[Ex. 1. Les nombres de Fibonacci]{\sffamily \foreignlanguage{french}{Ex. 1. L}es nombres de Fibonacci}
+{
+Ecrire l'algorithme récursif permettant de calculer le \textit{n}{}-ème nombre de Fibonacci, issu de la définition
+récursive donnée dans ce chapitre. Combien de fois le module est-il exécuté pour le calcul de
+\textit{F}\textsubscript{5} ? de \textit{F}\textsubscript{6} ?}
+
+
+\bigskip
+
+{
+Adapter l'algorithme pour le nombre total d'appels récursifs s'affiche à l'issue du calcul.}
+
+\section[Ex. 2. Les tours de Hanoï]{\sffamily \foreignlanguage{french}{Ex. 2. L}es tours de Hanoï}
+{
+Tracer l'algorithme des tours de Hanoï dans le cas \textit{n} = 3, c'est-à-dire détailler l'affichage complet de cet
+algorithme. Combien d'affichages cet algorithme génère-t-il pour une valeur \textit{n} quelconque ? }
+
+\section[Ex. 3. Taille d{}'une liste chainée]{\sffamily Ex. 3. Taille d'une liste chainée}
+{
+Ecrire un algorithme récursif qui calcule la taille d'une liste chainée. Comparez les versions procédurales et orienté
+objet de cet algorithme.}
+
+\section[Ex. 4. Le tableau symétrique]{\sffamily \foreignlanguage{french}{Ex. 4. L}e tableau symétrique}
+{
+Ecrire l'algorithme qui vérifie si le contenu d'un tableau est symétrique (c'est-à-dire si les premier et dernier
+élément sont égaux, le seconds et avant-dernier, et ainsi de suite).}
+
+\section[Ex. 5. Division entière]{\sffamily Ex. 5. Division entière}
+{
+Ecrire un module qui calcule la division entière de 2 entiers positifs de manière récursive ; les seuls opérateurs
+arithmétiques autorisés sont l'addition et la soustraction.}
+
+\section[Ex. 6. Recherche dichotomique]{\sffamily Ex. 6. Recherche dichotomique}
+{
+Ecrire une version récursive de l'algorithme de recherche dichotomique dans un tableau ordonné d'entiers. Cet algorithme
+reçoit en paramètre le tableau, la valeur recherchée, et retourne un booléen indiquant si la valeur se trouve dans le
+tableau. Dans l'affirmative, la position de la valeur recherchée est renvoyée dans un paramètre en sortie. }
+
+\section[Ex. 7. Le plus grand commun diviseur]{\sffamily Ex. 7. Le plus grand commun diviseur}
+{
+L'algorithme d'Euclide permet de calculer rapidement le PGCD de 2 nombres. Il peut se définir de la façon suivante :}
+
+\liststyleWWviiiNumx
+\begin{itemize}
+\item {
+PGCD(a, 0) = a}
+\item {
+PGCD(a, b) = PGCD(b, a MOD b) si b ${\neq}$ 0}
+\end{itemize}
+{
+Ecrire un algorithme récursif pour le calcul du PGCD. Cet algorithme générera une erreur si un des 2 nombres est
+négatif.}
+
+\section[Ex. 8. Calcul de puissance]{\sffamily Ex. 8. Calcul de puissance}
+{
+Ecrire un algorithme qui calcule la puissance entière d'un nombre réel en tenant compte du fait que :}
+
+\liststyleWWviiiNumx
+\begin{itemize}
+\item {
+\textit{x}\textit{\textsuperscript{n}} = (\textit{x}\textit{\textsuperscript{n}}\textsuperscript{/2})\textsuperscript{2}
+\ \ \ \ si \textit{n} est pair}
+\item {
+\textit{x}\textit{\textsuperscript{n}} =
+(\textit{x}\textsuperscript{(}\textit{\textsuperscript{n}}\textsuperscript{{}-1)/2})\textsuperscript{2} * \textit{x}
+\ \ si \textit{n} est impair}
+\end{itemize}
+
+\bigskip
+
+{
+Vérifier que votre algorithme fonctionne si \textit{n} est négatif ou nul. Combien de fois le module récursif est-il
+éxécuté lors du calcul de \textit{x}\textsuperscript{37} ?}
+
+
+\bigskip
+
+{\sffamily\bfseries
+\foreignlanguage{french}{Ex. 9. Les c}oefficients binomiaux}
+
+
+\bigskip
+
+{
+Calculer les coefficients binomiaux à partir de la définition récursive :}
+
+
+\bigskip
+
+\liststyleWWviiiNumx
+\begin{itemize}
+\item \begin{equation*}
+C_n^0=1
+\end{equation*}
+\item \begin{equation*}
+C_n^n=1
+\end{equation*}
+\item {
+ $C_n^p=C_{n-1}^{p-1}+C_{n-1}^p$\textsubscript{\ \ } si 0 < \textit{p} < \textit{n}}
+\end{itemize}
+
+\bigskip
+
+{
+Veillez à vérifier les paramètres de départ (\textit{n} et \textit{p} ne peuvent pas être négatifs). Si \textit{p}
+> \textit{n}, alors le coefficient vaut 0.}
+
+
+\bigskip
+
+{\sffamily\bfseries
+Ex. 10. Les taches de couleurs}
+
+
+\bigskip
+
+{
+Les couleurs des pavés d'un quadrillage sont stockées dans un tableau à 2 dimensions \textit{n} ${\times}$ \textit{n}
+(éléments de type Couleur). Les pavés adjacents (par les cotés, mais pas par les coins) de même couleur forment des
+«~taches~» de formes variées, comme le suggère le dessin suivant :}
+
+
+\bigskip
+
+{\centering  \includegraphics[width=4.452cm,height=4.452cm]{a2012Logique2eme-img026.jpg} \par}
+
+\bigskip
+
+{
+Résoudre les problèmes suivants : }
+
+
+\bigskip
+
+\liststyleWWviiiNumxii
+\begin{enumerate}
+\item {
+vérifier si 2 pavés (\textit{i}\textsubscript{1}, \textit{j}\textsubscript{1}) et (\textit{i}\textsubscript{2},
+\textit{j}\textsubscript{2}) sont dans une même tache}
+\item {
+trouver l'aire de la tache contenant le pavé (\textit{i}, \textit{j})}
+\item {
+trouve le périmètre de la tache contenant le pavé (\textit{i}, \textit{j})}
+\item {
+trouver l'aire de la plus grande tache du quadrillage}
+\item {
+changer la couleur de la tache contenant le pavé (\textit{i}, \textit{j}) avec une couleur entrée en paramètre}
+\end{enumerate}
+{
+Aide : à partir d'un pavé de départ, on visitera les pavés adjacents de même couleur, et on utilisera un tableau de
+booléens pour se rappeler si un pavé a déjà été traité.}
+
+
+\bigskip
+
+
+\bigskip
+
+{\sffamily\bfseries
+\foreignlanguage{french}{Ex. 11. Les n}ombres de Catalan}
+
+
+\bigskip
+
+{
+Le \textit{n}{}-ème \textit{nombre de Catalan}, noté \textit{C}\textit{\textsubscript{n}}, correspond au nombre de
+différentes façons de partager un polygone de \textit{n} + 2 côtés en triangles. Par exemple
+\textit{C}\textsubscript{3} = 5, car il y a 5 façons de partager un pentagone en 3 triangles :}
+
+
+\bigskip
+
+{\centering  \includegraphics[width=12.659cm,height=2.387cm]{a2012Logique2eme-img027.png} \par}
+
+\bigskip
+
+{
+Trivialement, \textit{C}\textsubscript{0} = 1, et on démontre que  $C_n=\overset{n-1}{\underset{i=0}{\sum }}C_i\ast
+C_{n-1-i}$}
+
+
+\bigskip
+
+\liststyleWWviiiNumvii
+\begin{enumerate}
+\item {
+calculez les nombres de Catalan C\textit{\textsubscript{i}} pour \textit{i} = 1, 2, 3, 4, 5. Vérifiez que les valeurs
+obtenues correspondent bien à la définition géométrique.}
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumvii
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+écrivez l'algorithme récursif, issu directement de la formule mathématique ci-dessus, permettant de calculer
+\textit{C}\textit{\textsubscript{n}}. Cette solution récursive vous semble-t-elle efficace ? Combien d'appels récursifs
+sont exécutés pour le calcul de \textit{C}\textsubscript{5} ?}
+\end{enumerate}
+
+\bigskip
+
+
+\bigskip
+
+\clearpage
+\bigskip
+
+\begin{flushleft}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{11.242001cm}m{4.741cm}}
+{\sffamily\bfseries Chapitre 6~-- La structure d'arbre}
+
+{\itshape La structure d'arbre trouve de nombreuses utilités en informatique : évaluation
+d'expressions algébriques, modélisation de l'inclusion d'ensembles, d'organisations hiérarchiques, de schémas en
+analyse, d'arbre généalogique, arborescence des dossiers dans un système d'exploitation, variables structurées C et en
+Cobol{\dots}} &
+\raggedleft\arraybslash  \includegraphics[width=4.494cm,height=4.045cm]{a2012Logique2eme-img028.png} \\
+\end{supertabular}
+\end{flushleft}
+
+\bigskip
+
+\section[Définition et terminologie]{\sffamily Définition et terminologie}
+{
+En informatique, un \textbf{arbre} est une structure de données constituée de \textbf{n{\oe}uds} assemblés par
+\textbf{niveaux}. C'est un graphe orienté connexe dont chaque arc relie un \textbf{n{\oe}ud père} à un \textbf{n{\oe}ud
+fils}. Chaque n{\oe}ud peut posséder un nombre quelconque de fils ; un n{\oe}ud sans fils est appelé \textbf{n{\oe}ud
+terminal} ou \textbf{feuille}. }
+
+{
+Chaque n{\oe}ud possède un et un seul père, sauf la \textbf{racine}, située au sommet de l'arbre, qui ne possède pas de
+n{\oe}ud père. Les n{\oe}uds autres que la racine ou les feuilles sont appelés \textbf{n{\oe}uds internes}. Deux
+n{\oe}uds ayant le même père sont des \textbf{frères}.}
+
+{\centering  \includegraphics[width=9.036cm,height=6.636cm]{a2012Logique2eme-img029.png} \par}
+
+\bigskip
+
+{
+\textit{Attention} : \textit{ne pas confondre l'arbre au sens informatique et celui étudié dans la théorie des graphes
+au cours de mathématique ; en théorie des graphes, un arbre est défini comme un graphe sans circuit et est dépourvu de
+toute structure hiérarchique. L'arbre au sens informatique est aussi appelé }arbre enraciné\textit{.}}
+
+{
+On peut aussi définir l'arbre de manière récursive : c'est une structure soit vide, soit composée d'un n{\oe}ud auquel
+est rattaché un ensemble fini d'arbres disjoints. Notez que cette définition récursive correspond bien à la réalité de
+ce qu'est un arbre dans la nature !}
+
+
+\bigskip
+
+{\sffamily\bfseries\itshape
+Niveau et hauteur}
+
+{
+Le \textbf{niveau} (ou \textbf{profondeur}) d'un n{\oe}ud est la distance qui le sépare de la racine. Il en découle que
+le niveau de la racine est 0, et le niveau de tout autre n{\oe}ud est égal au niveau de son père augmenté de 1.}
+
+
+\bigskip
+
+{\centering
+ \includegraphics[width=5.092cm,height=3.819cm]{a2012Logique2eme-img030.png}  
+\par}
+
+{\itshape
+Exemple : dans le graphe ci-dessus, les niveaux sont les suivants : 0 pour A, 1 pour B, C, D, E, F, 2 pour G, H, I, J,
+K, L et 3 pour M, N, O, P.}
+
+{
+Inversement, la \textbf{hauteur} d'un n{\oe}ud est la distance entre ce n{\oe}ud et sa descendance la plus éloignée : la
+hauteur d'une feuille est donc 0 et la hauteur de tout autre n{\oe}ud est le maximum de la hauteur de ses fils augmenté
+de 1. La \textbf{hauteur d'un arbre} est la hauteur de sa racine, et correspond aussi à son niveau maximum. Elle n'est
+pas définie pour un arbre vide.}
+
+{\itshape
+Pour le même graphe ci-dessus, les n{\oe}uds C, D, H, I, L, M, N, O et P ont une hauteur 0 (ce sont les feuilles de
+l'arbre). La hauteur de G, J, K et F est 1, celle de B et E est 2 et enfin A est à hauteur 3, qui correspond aussi à la
+hauteur de l'arbre.}
+
+{
+Les n{\oe}uds d'un arbre contiennent de l'information, appelée parfois «~étiquette~». L'étiquette peut être un simple
+entier ou une variable structurée plus complexe, l'instance d'un objet, un pointeur, etc. Le type de l'information
+détermine le type de l'arbre : on parlera d'un arbre d'entiers, de chaines et en général d'arbre de type T.}
+
+
+\bigskip
+
+{\sffamily\bfseries\itshape
+Arbres particuliers}
+
+{
+Un arbre dont tout n{\oe}ud possède au plus un descendant est appelé \textbf{arbre dégénéré}.}
+
+{
+Un arbre dont tout n{\oe}ud possède au plus un nombre déterminé \textit{n} de descendants est appelé \textbf{arbre
+}\textbf{\textit{n}}\textbf{{}-aire}. }
+
+{
+Si dans un arbre \textit{n}{}-aire, toutes les feuilles ont le même niveau, et si la racine et tous les n{\oe}uds
+internes ont le même nombre de fils, l'arbre est alors \textbf{complet}. En particulier, un arbre dégénéré est complet
+! Le schéma ci-dessus montre un arbre «~2-aire~» complet : chaque n{\oe}ud non terminal à 2 fils, et toutes les
+feuilles sont au même niveau.}
+
+\section[]{ \includegraphics[width=6.918cm,height=3.909cm]{a2012Logique2eme-img031.png} }
+\section[Parcours d{}'un arbre]{\sffamily Parcours d'un arbre}
+{
+Il y a plusieurs façons de parcourir un arbre, le choix du parcours dépendant du type de traitement des informations de
+l'arbre.}
+
+
+\bigskip
+
+{\sffamily\bfseries\itshape
+Parcours en largeur}
+
+{
+Le parcours en largeur, aussi nommé \textbf{parcours par niveau}, consiste à visiter les n{\oe}uds dans l'ordre de leur
+niveau : la racine, puis les n{\oe}uds de niveau 1, ceux de niveau 2 et ainsi de suite. L'ordre de parcours des
+n{\oe}uds pour un niveau donné est déterminé de manière récursive par l'ordre des n{\oe}uds parents. Sur les schémas,
+l'ordre des n{\oe}uds correspond à leur disposition de gauche à droite.}
+
+{\itshape
+Exemple : pour le graphe suivant, l'ordre de visite des n{\oe}uds par le parcours par niveau est A, B, C, D, E, F, G, H,
+I, J, K, L, M, N, O, P. }
+
+{\centering  \includegraphics[width=5.821cm,height=4.366cm]{a2012Logique2eme-img032.png} \par}
+{\sffamily\bfseries\itshape
+Parcours en profondeur}
+
+{
+Il s'agit d'un parcours récursif sur les n{\oe}uds de l'arbre : partant de la racine, on visite tous ses fils, mais on
+ne passe à un n{\oe}ud frère qu'après avoir visité tous les fils du n{\oe}ud courant, et ceci récursivement. Il y a
+deux possibilités de traitement des n{\oe}uds : si le n{\oe}ud courant est traité avant ses fils, on parle de
+\textbf{parcours préfixé}. Si le n{\oe}ud courant est traité après ses fils, on parle de \textbf{parcours postfixé}.}
+
+{\itshape
+Pour le graphe ci-dessus, le parcours en profondeur préfixé donne : A, B, G, M, N, H, I, C, D, E, J, O, K, P, F, L. Le
+parcours en profondeur postfixé donne : M, N, G, H, I, B, C, D, O, J, P, K, E, L, F, A.}
+
+\section[Implémentation orienté objet]{\sffamily Implémentation orienté objet}
+{
+Un arbre est déterminé par sa racine qui est un n{\oe}ud de type T. Chaque n{\oe}ud contient de l'information (attribut
+valeur de type T) et doit permettre de passer à ses descendants (le 1\textsuperscript{er}, le 2\textsuperscript{ème},
+etc) d'où également un attribut de type Liste qui permet d'accéder par position à chacun des fils (Liste d'éléments de
+type N{\oe}ud<T>). L'implémentation de l'arbre est donc déterminée par la donnée des deux
+classes suivantes : }
+
+{\sffamily
+\textbf{classe} N{\oe}ud<T>\ \ \ \ \ \ \ \ \ \ \textbf{classe} Arbre<T>}
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{privé} :\ \ \ \ \ \ \ \ \ \ \ \  \ \ \ \ \textbf{privé} :}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ valeur~: T\ \ \ \ \ \ \ \ \ \  \ \ \ \ \ \ \ \ \ racine : N{\oe}ud<T>}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ ListeFils : Liste<N{\oe}ud<T>{\textgreater}\ \ \ \ 
+\ \ \ \ \textbf{public} :\ \ }
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{public} :\ \ \ \ \ \ \ \ \ \  \ \ \ \ \ \ \ \ \ \textbf{constructeur} Arbre( )\ \ \ \ }
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }\textbf{constructeur} N{\oe}ud<T>(val : T) \ \ \ \ 
+\ \ \ \ \ \ \ \ \ // construit un arbre vide}
+
+{
+\textsf{\ \ \ \ \ \ \ \ \ \ }\textsf{// construit un n{\oe}ud sans fils\ \ \ \ 
+\ \ \ \ \ \ \ \ \ }\textsf{\textbf{méthode}}\textsf{ getRacine( ) }[F0E0?]\textsf{ N{\oe}ud<T>}}
+
+{
+\textsf{\ \ \ \ \ \ \ \ \ \ }\textsf{\textbf{méthode}}\textsf{ getValeur( ) }[F0E0?]\textsf{ T\ \ \ \ \ \ 
+\ \ \ \ \ \ \ \ \ }\textsf{\textbf{méthode}}\textsf{ setRacine(racine : N{\oe}ud<T>)}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \textbf{méthode} setValeur(val : T)\ \ \ \ \ \ \textbf{fin classe}}
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ getNbFils( ) }[F0E0?]\textsf{ entier}}
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ getFils(i : entier) }[F0E0?]\textsf{
+N{\oe}ud<T>}}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }\textbf{méthode} setFils(i : entier, fils : N{\oe}ud<T>)}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }\textbf{méthode} ajouterFils(fils : N{\oe}ud<T>)\ \ // ajout à la
+fin de la liste des fils}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }\textbf{méthode} supprimerFils(i : entier)}
+
+{\sffamily\bfseries
+fin classe}
+
+{
+Les contenus des méthodes de la classe N{\oe}ud<T> se laissent deviner aisément ; les cinq
+dernières méthodes consistent à appliquer respectivement sur l'attribut ListeFils les méthodes \textit{taille},
+\textit{get}, \textit{set}, \textit{ajouter} et \textit{supprimer} de la classe Liste.}
+
+{
+Noter que -- comme pour la liste chainée monodirectionnelle -- on ne peut voyager dans un arbre que dans un seul sens,
+de la racine vers les feuilles, il n'y a pas de lien d'un n{\oe}ud vers son n{\oe}ud père. Le rajout de ce lien serait
+une possibilité~d'implémentation (comme pour la liste bidirectionnelle) mais il n'est pas nécessaire pour la plupart
+des algorithmes de parcours qui fonctionnent essentiellement de manière récursive (pour les parcours en profondeur) ou
+à l'aide d'une file (parcours en largeur). Nous donnons à titre d'exemple le détail de ces algorithmes de parcours.}
+
+\section[Exemple~: algorithmes de parcours]{\sffamily Exemple : algorithmes de parcours}
+{\sffamily\bfseries\itshape
+Parcours en largeur}
+
+{
+Il n'existe pas de version récursive pour ce parcours. La solution ci-dessous utilise une file où sont placés les fils
+des n{\oe}uds visités successifs.}
+
+{\sffamily
+\textbf{module} parcoursLargeur(monArbre : Arbre<T>)\ \ \ \ }
+
+{\sffamily
+\ \ \ \ \ maFile : File<N{\oe}ud<T>{\textgreater}}
+
+{\sffamily
+\ \ \ \ \ n{\oe}udCourant : N{\oe}ud<T>}
+
+{\sffamily
+\ \ \ \ \ i : entier}
+
+{
+\textsf{\ \ \ \ \ }\textsf{maFile }[F0DF?]\textsf{ nouvelle
+File<N{\oe}ud<T>{\textgreater}( )}}
+
+{\sffamily
+\ \ \ \ \ \textbf{si} monArbre.getRacine( ) ${\neq}$ rien \textbf{alors}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ maFile.enfiler(monArbre.getRacine( ))}
+
+{\sffamily\bfseries
+\ \ \ \ \ fin si}
+
+{\sffamily
+\ \ \ \ \ \textbf{tant que} NON maFile.estVide( ) \textbf{faire}}
+
+{
+\textsf{\ \ \ \ \ \ \ \ \ \ }\textsf{n{\oe}udCourant }[F0DF?]\textsf{ maFile.défiler( )}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ // traitement du n{\oe}ud courant}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \textbf{pour} i \textbf{de} 1 \textbf{à} n{\oe}udCourant.getNbFils( ) \textbf{faire}}
+
+{\sffamily
+\foreignlanguage{french}{\textbf{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}\foreignlanguage{english}{maFile.enfiler(n{\oe}udCourant.getFils(i))}}
+
+{\sffamily
+\foreignlanguage{english}{\ \ \ \ \ \ \ \ \ \ }\foreignlanguage{french}{\textbf{fin pour}}}
+
+{\sffamily\bfseries
+\ \ \ \ \ fin tant}
+
+{\sffamily\bfseries
+fin}
+
+
+\bigskip
+
+{\sffamily\bfseries\itshape
+Parcours en profondeur}
+
+{
+Ce parcours est essentiellement récursif. Il faut ici un module façade, qui appelle le module récursif avec la racine de
+l'arbre comme première valeur du paramètre. Noter l'emplacement du traitement du n{\oe}ud courant selon le parcours
+préfixé ou postfixé.}
+
+{\sffamily
+\textbf{module} parcoursProfondeur(monArbre : Arbre<T>)}
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{si }monArbre.getRacine( ) ${\neq}$ rien \textbf{alors}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ parcoursProfondeurRécursif(monArbre.getRacine( ))}
+
+{\sffamily\bfseries
+\ \ \ \ \ fin si}
+
+{\sffamily\bfseries
+fin}
+
+
+\bigskip
+
+{\sffamily
+\textbf{module} parcoursProfondeurRécursif(n{\oe}udCourant : N{\oe}ud<T>)}
+
+{\sffamily
+\ \ \ \ \ i : entier}
+
+{\sffamily
+\ \ \ \ \ // instructions de traitement du n{\oe}ud courant si parcours préfixé}
+
+{\sffamily
+\ \ \ \ \ \textbf{pour} i \textbf{de} 1 \textbf{à} n{\oe}udCourant.getNbFils( ) \textbf{faire}}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }parcoursProfondeurRécursif(n{\oe}udCourant.getFils(i))}
+
+{\sffamily
+\ \ \ \ \ \textbf{fin pour}}
+
+{\sffamily
+\ \ \ \ \ // instructions de traitement du n{\oe}ud courant si parcours postfixé}
+
+{\sffamily\bfseries
+fin}
+
+\section[Arbre binaire]{\sffamily Arbre binaire}
+{
+L'\textbf{arbre binaire} est un type d'arbre particulier : chaque n{\oe}ud possède au plus deux descendants qui sont
+appelés \textbf{fils gauche} et \textbf{fils droit}. Les deux sous-arbres attachés à un n{\oe}ud donné sont appelés
+sous-arbre gauche et sous-arbre droit. }
+
+{\centering  \includegraphics[width=4.671cm,height=4.129cm]{a2012Logique2eme-img033.jpg} \par}
+{
+Attention, l'arbre binaire n'est pas un cas particulier d'arbre \textit{n}{}-aire (avec la valeur 2 pour \textit{n}),
+car les deux fils d'un n{\oe}ud sont liés à une orientation~(gauche ou droit). Dans le cas où un n{\oe}ud ne possède
+qu'un fils, il faut clairement indiquer dans le schéma d'un arbre binaire s'il s'agit du fils gauche ou droite, on ne
+peut donc jamais représenter un fils à la verticale du père.}
+
+{
+Ainsi, dans l'exemple ci-dessus, le n{\oe}ud 9 est le fils droit du n{\oe}ud 5, et le n{\oe}ud 4 est le fils gauche du
+n{\oe}ud 9.}
+
+{\sffamily\bfseries\itshape
+Implémentation}
+
+{
+Elle se déduit de l'implémentation de l'arbre «~quelconque~». Pour le n{\oe}ud d'arbre binaire, la liste des fils est
+remplacée par deux liens : un vers le fils gauche et un autre vers le fils droit.}
+
+
+\bigskip
+
+{\sffamily
+\textbf{classe} N{\oe}udBinaire<T>\ \ \ \ \ \ \ \ \textbf{classe}
+ArbreBinaire<T>}
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{privé} :\ \ \ \ \ \ \ \ \ \ \ \  \ \ \ \ \textbf{privé} :}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ valeur~: T\ \ \ \ \ \ \ \ \ \  \ \ \ \ \ \ \ \ \ racine : N{\oe}udBinaire<T>}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ gauche : <N{\oe}udBinaire<T>{\textgreater}\ \ \ \ 
+\ \ \ \ \textbf{public} :\ \ }
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ droit : <N{\oe}udBinaire<T>{\textgreater}\ \ \ \ \ \ 
+\ \ \ \ \textbf{constructeur} ArbreBinaire( )}
+
+{\sffamily
+\textbf{\ \ \ \ \ }\textbf{public} :\ \ \ \ \ \ \ \ \ \  \ \ \ \ // construit un arbre vide\ \ \ \ }
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{constructeur}}\textsf{
+N{\oe}udBinaire<T>(val : T) \ \  \ \ \ \ }\textsf{\textbf{méthode}}\textsf{ getRacine( )
+}[F0E0?]\textsf{ N{\oe}udBinaire<T>}\textsf{ \ \ \ \ \ \ \ \ \ }}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ // construit un n{\oe}ud sans fils\ \ \ \  \ \ \ \ \textbf{méthode} setRacine(r :
+N{\oe}udBinaire<T>) \ \ \ \ }
+
+{
+\textsf{\ \ \ \ \ \ \ \ \ \ }\textsf{\textbf{méthode}}\textsf{ getValeur( ) }[F0E0?]\textsf{
+T\ \ \ \ \ \ }\textsf{\textbf{fin classe}}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \textbf{méthode} setValeur(val : T)}
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ getGauche( ) }[F0E0?]\textsf{
+N{\oe}udBinaire<T>}}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }\textbf{méthode} setGauche(fils : N{\oe}udBinaire<T>)}
+
+{
+\textsf{\textbf{\ \ \ \ \ \ \ \ \ \ }}\textsf{\textbf{méthode}}\textsf{ getDroit( ) }[F0E0?]\textsf{
+N{\oe}udBinaire<T>}}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }\textbf{méthode} setDroit(fils : N{\oe}udBinaire<T>)}
+
+{\sffamily\bfseries
+fin classe}
+
+\section[Parcours de l{}'arbre binaire]{\sffamily Parcours de l'arbre binaire}
+{\sffamily\bfseries\itshape
+Parcours en largeur}
+
+{
+La boucle «~pour~» du parcours de l'arbre «~quelconque~» est remplacée ici par la mise en file de chacun des fils du
+n{\oe}ud courant. Il faut toutefois prendre garde de ne pas mettre de lien vide dans la file.}
+
+
+\bigskip
+
+
+\bigskip
+
+{\sffamily
+\textbf{module} parcoursLargeur(monArbre : ArbreBinaire<T>)\ \ \ \ }
+
+{\sffamily
+\ \ \ \ \ maFile : File<N{\oe}udBinaire<T>{\textgreater}}
+
+{\sffamily
+\ \ \ \ \ n{\oe}udCourant : N{\oe}udBinaire<T>}
+
+{\sffamily
+\ \ \ \ \ i : entier}
+
+{
+\textsf{\ \ \ \ \ }\textsf{maFile }[F0DF?]\textsf{ nouvelle
+File<N{\oe}udBinaire<T>{\textgreater}( )}}
+
+{\sffamily
+\ \ \ \ \ \textbf{si} monArbre.getRacine( ) ${\neq}$ rien \textbf{alors}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ maFile.enfiler(monArbre.getRacine( ))}
+
+{\sffamily\bfseries
+\ \ \ \ \ fin si}
+
+{\sffamily
+\ \ \ \ \ \textbf{tant que} NON maFile.estVide( ) \textbf{faire}}
+
+{
+\textsf{\ \ \ \ \ \ \ \ \ \ }\textsf{n{\oe}udCourant }[F0DF?]\textsf{ maFile.défiler( )}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ // traitement du n{\oe}ud courant}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \textbf{si} n{\oe}udCourant.getGauche( ) ${\neq}$ rien \textbf{alors}}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }maFile.enfiler(n{\oe}udCourant.getGauche( ))}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \textbf{fin si}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \textbf{si} n{\oe}udCourant.getDroit( ) ${\neq}$ rien \textbf{alors}}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }maFile.enfiler(n{\oe}udCourant.getDroit( ))}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ \textbf{fin si}}
+
+{\sffamily\bfseries
+\ \ \ \ \ fin tant}
+
+{\sffamily\bfseries
+fin}
+
+{\sffamily\bfseries\itshape
+Parcours en profondeur}
+
+{
+Pour les arbres binaires, aux parcours en profondeur préfixé et postfixé s'ajoute le \textbf{parcours infixé} : le
+traitement d'un n{\oe}ud se fait entre les parcours de son sous-arbre gauche et de son sous-arbre droit.}
+
+{\sffamily
+\textbf{module} parcoursProfondeur(monArbre : ArbreBinaire<T>)\ \ \ \ }
+
+{\sffamily
+\ \ \ \ \ parcoursProfondeurRécursif(monArbre.getRacine( ))}
+
+{\sffamily\bfseries
+fin}
+
+
+\bigskip
+
+{\sffamily
+\textbf{module} parcoursProfondeurRécursif(n{\oe}udCourant : N{\oe}udBinaire<T>)}
+
+{\sffamily
+\ \ \ \ \ \textbf{si} n{\oe}udCourant ${\neq}$ rien \textbf{alors}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ // instructions de traitement du n{\oe}ud courant si parcours préfixé (ou RGD)}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }parcoursProfondeurRécursif(n{\oe}udCourant.getGauche( ))}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ // instructions de traitement du n{\oe}ud courant si parcours infixé (ou GRD)}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ \ \ \ \ }parcoursProfondeurRécursif(n{\oe}udCourant.getDroit( ))}
+
+{\sffamily
+\ \ \ \ \ \ \ \ \ \ // instructions de traitement du n{\oe}ud courant si parcours postfixé (ou GDR)}
+
+{\sffamily
+\ \ \ \ \ \textbf{fin si}}
+
+{\sffamily\bfseries
+fin}
+
+{\itshape
+Par exemple, pour l'arbre binaire représenté ci-dessous :}
+
+{\centering  \includegraphics[width=4.457cm,height=3.687cm]{a2012Logique2eme-img034.png} \par}
+{\itshape
+les ordres de traitements sont les suivants :}
+
+\liststyleWWviiiNumx
+\begin{itemize}
+\item {
+parcours en largeur : 8, 3, 10, 1, 6, 14, 4, 7, 13}
+\item {
+parcours en profondeur préfixé : 8, 3, 1, 6, 4, 7, 10, 14, 13}
+\item {
+parcours en profondeur infixé : 1, 3, 4, 6, 7, 8, 10, 13, 14}
+\item {
+parcours en profondeur postfixé : 1, 4, 7, 6, 3, 13, 14, 10, 8}
+\end{itemize}
+\section[Arbre binaire ordonné]{\sffamily Arbre binaire ordonné}
+{\sffamily\bfseries\itshape
+Définition}
+
+{
+Un arbre binaire est ordonné si pour tout n{\oe}ud, toutes les valeurs de son sous-arbre gauche sont inférieures ou
+égales à la valeur du n{\oe}ud, et toutes les valeurs de son sous-arbre droit sont strictement supérieures à la valeur
+du n{\oe}ud.}
+
+{\itshape
+Exemple :}
+
+{\centering  \includegraphics[width=6.994cm,height=5.486cm]{a2012Logique2eme-img035.png} \par}
+{
+Cette structure se prête assez bien aux opérations de recherche, d'ajout, de suppression car elle permet de localiser
+rapidement le n{\oe}ud où doit être exécuté l'opération, tout en offrant une souplesse dans ses modifications (comme
+pour une liste chainée). La recherche s'apparente à la recherche dichotomique dans un tableau, et si l'arbre est
+\textit{équilibré} (pour une définition précise de ce terme, voir énoncé de l'ex. 9), toutes les opérations citées ont
+une complexité en O(log\textsubscript{2}\textit{n}).}
+
+{
+Pour obtenir la liste des valeurs d'un arbre binaire ordonné dans l'ordre, il suffit de parcourir ses n{\oe}uds par le
+parcours en profondeur infixé.}
+
+\section[Exercices]{\sffamily Exercices}
+\section[Les exercices 1 à 8 peuvent être résolus indifféremment dans le cas d{}'un arbre quelconque ou d{}'un arbre
+binaire.]{\itshape Les exercices 1 à 8 peuvent être résolus indifféremment dans le cas d'un
+arbre quelconque ou d'un arbre binaire.}
+\section[Ex. 1. Combien de n{\oe}uds~?]{\sffamily Ex. 1. Combien de n{\oe}uds ?}
+{
+Ecrire un algorithme qui compte le nombre total de n{\oe}uds contenus dans un arbre.}
+
+\section[Ex. 2. Et combien de feuilles~?]{\sffamily Ex. 2. Et combien de feuilles ?}
+{
+Ecrire un algorithme qui compte le nombre de feuilles que possède un arbre.}
+
+\section[Ex. 3. Hauteur]{\sffamily Ex. 3. Hauteur}
+{
+Ecrire un algorithme qui calcule la hauteur d'un arbre, c'est-à-dire la plus grande hauteur (ou la plus grande
+profondeur) de ses n{\oe}uds.}
+
+\section[Ex. 4. Problème de niveau]{\sffamily Ex. 4. Problème de niveau}
+{
+Ecrire un algorithme qui retourne le nombre de n{\oe}uds d'un arbre situés à un niveau donné (valeur entière entrée en
+paramètre).}
+
+\section[]{\sffamily }
+\section[Ex. 5. Tout le monde est là~?]{\sffamily Ex. 5. Tout le monde est là ?}
+{
+Ecrire un algorithme qui vérifie si un arbre est complet.}
+
+\section[Ex. 6. Arbre dégénéré]{\sffamily Ex. 6. Arbre dégénéré}
+{
+Ecrire un algorithme qui indique si un arbre est dégénéré ou non.}
+
+\section[Ex. 7. Additions]{\sffamily Ex. 7. Additions}
+{
+Soit un arbre d'entiers dont seules les feuilles ont été affectées par des valeurs. Compléter l'arbre de telle sorte que
+la valeur de chaque n{\oe}ud soit égale à la somme des valeurs de ses fils.}
+
+
+\bigskip
+
+\begin{flushleft}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{5.215cm}m{5.217cm}m{5.217cm}}
+ \includegraphics[width=4.406cm,height=3.667cm]{a2012Logique2eme-img036.png}  &
+~
+
+~
+
+~
+
+{ devient après remplissage [F0E0?]} &
+ \includegraphics[width=4.773cm,height=3.955cm]{a2012Logique2eme-img037.png} \\
+\end{supertabular}
+\end{flushleft}
+
+\bigskip
+
+\section[Ex. 8. Combien de valeurs~?]{\sffamily Ex. 8. Combien de valeurs ?}
+{
+Ecrire un algorithme qui indique le nombre de valeurs différentes que contient un arbre.}
+
+\section[Arbres binaires]{\sffamily Arbres binaires}
+\section[Ex. 9. Arbre binaire équilibré]{\sffamily Ex. 9. Arbre binaire équilibré}
+{
+Dans un arbre binaire, on définit le \textbf{facteur d'équilibre} d'un n{\oe}ud de la façon suivante : c'est la
+différence entre la hauteur de son sous-arbre gauche et celle de son sous-arbre droit. On dit que l'arbre est
+\textbf{équilibré} si, pour tout n{\oe}ud de l'arbre, ce facteur d'équilibre est compris entre --1 et 1.}
+
+\section[Ex. 10. Arbre binaire pair]{\sffamily Ex. 10. Arbre binaire pair}
+{
+Un arbre binaire est \textbf{pair} si chacun de ses n{\oe}uds a soit 2 fils, soit aucun. Ecrire un algorithme qui
+vérifie si un arbre binaire possède cette propriété. N. B. : un arbre vide est pair.}
+
+\section[Ex. 11. OXO]{\sffamily Ex. 11. OXO}
+{
+Soit un arbre binaire de caractères. Vérifier s'il contient la configuration `O'-`X'-`O' formée respectivement par un
+fils gauche, un père et un fils droit.}
+
+\section[]{\sffamily }
+\section[]{\sffamily }
+\section[Ex. 12. Arbre binaire symétrique]{\sffamily Ex. 12. Arbre binaire symétrique}
+{
+Ecrire un algorithme qui vérifie si un arbre binaire est \textbf{symétrique}, c'est-à-dire si le sous-arbre gauche de la
+racine est identique en miroir à son sous-arbre droit.}
+
+
+\bigskip
+
+{\centering  \includegraphics[width=4.805cm,height=4.307cm]{a2012Logique2eme-img038.jpg} \par}
+\section[Arbres binaires ordonnés]{\sffamily Arbres binaires ordonnés}
+\section[Ex. 13. L{}'arbre binaire est{}-il ordonné~?]{\sffamily Ex. 13. L'arbre binaire est-il
+ordonné ?}
+{
+Ecrire un algorithme qui vérifie si un arbre binaire est ordonné.}
+
+\section[Ex. 14. Le maximum]{\sffamily Ex. 14. Le maximum}
+{
+Ecrire un algorithme qui retourne la valeur maximum d'un arbre binaire ordonné.}
+
+\section[Ex. 15. Recherche dichotomique]{\sffamily Ex. 15. Recherche dichotomique}
+{
+Ecrire un algorithme qui recherche dans un arbre binaire la présence d'un n{\oe}ud de valeur donnée, et en retourne
+l'accès. Si la valeur ne se trouve pas dans l'arbre, l'algorithme \ retourne \textit{rien} dans ce cas.}
+
+\section[Ex. 16. Ajout de valeur]{\sffamily Ex. 16. Ajout de valeur}
+{
+Ecrire un algorithme qui ajoute un n{\oe}ud dans un arbre binaire ordonné, dont la valeur est entrée en paramètre.}
+
+\section[Arbres quelconques]{\sffamily Arbres quelconques}
+\section[Ex. 17. Le dictionnaire]{\sffamily Ex. 17. Le dictionnaire}
+\section{Utilisons un arbre pour stocker les mots d'un dictionnaire. Les lettres d'un mot sont représentées chacune par
+un n{\oe}ud à un niveau différent et les mots ayant le même début partagent leurs n{\oe}uds. De plus, un caractère
+spécial indique la fin d'un mot. La racine ne contient rien. Les fils d'un n{\oe}ud ne sont pas forcément dans l'ordre
+alphabétique.}
+\section[Dans l{}'exemple ci{}-dessous, le dictionnaire contient les mots AI,~AIL, AIT, AS, SA, SOL, SOT,
+Y.]{\textit{Dans l'exemple ci-dessous, le dictionnaire contient les mots} AI,~AIL, AIT, AS, SA, SOL, SOT, Y.}
+\section[]{\sffamily  \includegraphics[width=6.999cm,height=6.195cm]{a2012Logique2eme-img039.jpg}
+}
+\section[Ecrire un algorithme~:]{ Ecrire un algorithme :}
+\liststyleWWviiiNumix
+\begin{enumerate}
+\item {
+qui affiche tous les mots du dictionnaire}
+\item {
+qui ajoute un mot dans le dictionnaire}
+\item {
+qui enlève un mot du dictionnaire}
+\end{enumerate}
+\section[Ex. 18. Au fil de l{}'eau]{\sffamily Ex. 18. Au fil de l'eau}
+\section{Les cours d'eau d'un bassin fluvial peuvent être schématisés avec un arbre : la racine contient le nom du
+fleuve, et les fils d'un n{\oe}ud sont les affluents du fleuve ou des rivières faisant partie du bassin fluvial.}
+\section[]{\sffamily 
+\includegraphics[width=11.529cm,height=4.768cm]{a2012Logique2eme-img040.png} }
+\section[Ecrire un algorithme qui reçoit le nom d{}'un cours d{}'eau en paramètre et affiche la suite des rivières qui
+le conduisent au fleuve principal. Par exemple, pour «~Somme~», l{}'algorithme affiche «~Somme~», «~Ourthe~» et
+«~Meuse~».]{Ecrire un algorithme qui reçoit le nom d'un cours d'eau en paramètre et affiche la suite des rivières qui
+le conduisent au fleuve principal. \textit{Par exemple, pour «~Somme~», l'algorithme affiche «~Somme~», «~Ourthe~» et
+«~Meuse~».}}
+\clearpage
+\bigskip
+
+\begin{flushleft}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{11.242001cm}m{4.741cm}}
+{\sffamily\bfseries Chapitre 7~-- Les graphes}
+
+~
+ &
+\raggedleft\arraybslash  \includegraphics[width=4.092cm,height=3.999cm]{a2012Logique2eme-img041.jpg} \\
+\end{supertabular}
+\end{flushleft}
+
+\bigskip
+
+\section[1. Utilité]{\sffamily 1. Utilité}
+{
+La théorie des graphes permet de répondre à différents problèmes se formulant en termes d'\textbf{objets} et de
+\textbf{liens} entre ceux-ci. De nombreux problèmes relatifs à l'étude des réseaux peuvent être résolus grâce à la
+théorie des graphes, que ce soit des problèmes de voyage (réseaux aériens, routiers, ferroviaires) ou des problèmes de
+communication entre personnes (réseaux téléphoniques) ou entre ordinateurs (réseaux informatiques, internet,{\dots})}
+
+{
+Un problème classique de la théorie des graphes, et qui a prouvé~toute son utilité depuis l'invention du GPS, est la
+détermination du chemin le plus rapide (ou le plus court ou encore le moins coûteux) entre deux localisations
+géographiques. Pour résoudre ce type de problème, il faut connaitre les différents relais ou points de passage (objets)
+et savoir lesquels sont reliés entre eux par des routes (les liens), ainsi que des informations supplémentaires sur ces
+liens (distance, type de route, etc.).}
+
+{
+Un autre pilier de la théorie des graphes est l'étude de l'ordonnancement des tâches. Quelles sont les contraintes
+conditionnant l'avancement d'un projet ? Quelle tâche doit être finie avant que telle autre ne commence ? Comment tenir
+compte des tâches concurrentes ?}
+
+{
+D'autres domaines peuvent également être abordés :}
+
+\liststyleWWviiiNumv
+\begin{itemize}
+\item {
+analyse d'un programme, d'un algorithme}
+\item {
+élaboration de cartes géographiques}
+\item {
+représentation de relations entre individus (familiales, professionnelles, ...)}
+\item {
+représentation d'automates d'états finis, de tables de décisions, ...}
+\end{itemize}
+{
+Le but de cette partie du cours n'est pas d'aborder jusque dans les moindres détails la théorie des graphes. Celle-ci et
+ses développements sont d'une telle richesse qu'ils font l'objet de nombreux ouvrages spécialisés. Nous nous limiterons
+à un aperçu synthétisé permettant de situer les problèmes et de servir de tremplin à une étude personnelle plus
+approfondie.}
+
+\section[2. Terminologie]{\sffamily 2. Terminologie}
+{
+N.B.~Les graphes vous sont déjà familiers, puisqu'ils ont déjà été étudiés au cours de mathématique de
+1\textsuperscript{ère} année. Nous rappelons brièvement ici les principales définitions, et renvoyons le lecteur au
+syllabus de mathématique de 1\textsuperscript{ère} pour plus de précision.}
+
+\subsection[2. 1. Définition]{\sffamily 2. 1. Définition}
+{
+Un \textbf{graphe} est un modèle mathématique représentant les liens existant entre différents objets de même type,
+appelés \textbf{n{\oe}uds} ou \textbf{sommets}. Les liens sont appelés \textbf{arcs} ou \textbf{arêtes}, selon que le
+graphe est orienté ou non. On peut donc voir un graphe comme l'association de l'ensemble S de ses n{\oe}uds \ et de
+l'ensemble A de ses arêtes :}
+
+{\centering
+G = (S, A)
+\par}
+
+
+\bigskip
+
+{
+On représente schématiquement un graphe par un ensemble de points reliés entre eux par des traits ou des lignes
+représentant ces liens.}
+
+\subsection[2.2. Types de graphes]{\sffamily 2.2. Types de graphes}
+\subsection[Graphe orienté]{\sffamily\itshape Graphe orienté}
+{
+Un graphe est \textbf{orienté} lorsque ses n{\oe}uds sont reliés par des \textbf{arcs}. Un arc est un \textbf{couple}
+(\textit{u}, \textit{v}) de n{\oe}uds, où \textit{u} est l'\textbf{origine} du couple (ou encore \textit{prédécesseur},
+\textit{départ} ou \textit{extrémité initiale}) et \textit{v} l'\textbf{extrémité} (ou encore \textit{successeur},
+\textit{arrivée} ou \textit{extrémité terminale}). On dira de cet arc qu'il \textit{part} du n{\oe}ud \textit{u} et
+qu'il \textit{arrive} au n{\oe}ud \textit{v}. Dans la représentation schématique d'un graphe orienté, on représente
+habituellement les arcs par des flèches qui traduisent le sens de la relation entre deux n{\oe}uds.}
+
+{
+Exemple : G = (S, A) avec S = \{A, B, C, D, E\} et A = \{(A, D), (A, E), (B, A), (B, E), (C, A), (C, E), (D, B), (D, C),
+(E, D)\}}
+
+{\centering  \includegraphics[width=5.159cm,height=4.598cm]{a2012Logique2eme-img042.png} \par}
+{
+Un graphe orienté peut aussi contenir des boucles : une \textbf{boucle} est un arc dont l'origine et l'extrémité sont
+identiques, elle part et arrive au même n{\oe}ud. }
+
+{
+Un graphe orienté est dit \textbf{symétrique} si l'existence d'un arc allant de \textit{u} vers \textit{v} implique
+l'existence d'un arc «~réciproque~» de \textit{v} vers \textit{u} (avec \textit{u }${\neq}$ \textit{v}).}
+
+\subsection[Graphe non orienté]{\sffamily\itshape Graphe non orienté}
+{
+Dans un graphe \textbf{non orienté}, les n{\oe}uds sont reliés par des \textbf{arêtes}. Une arête est une \textbf{paire}
+\{\textit{u}, \textit{v}\} de n{\oe}uds, c'est-à-dire un ensemble non ordonné de deux n{\oe}uds (pour rappel,
+\{\textit{u}, \textit{v}\} = \{\textit{v}, \textit{u}\}).}
+
+{
+Exemple : G = (S, A) avec S = \{A, B, C, D, E, F\} et A = \{\{A, B\}, \{A, E\}, \{B, C\}, \{C, D\}, \{C, F\}, \{D, E\},
+\{D, F\}, \{E, F\}\}}
+
+
+\bigskip
+
+{\centering  \includegraphics[width=4.284cm,height=3.657cm]{a2012Logique2eme-img043.jpg} \par}
+
+\bigskip
+
+{
+Remarquons qu'un graphe non orienté peut être représenté par un graphe orienté : il suffit de remplacer chaque arête
+reliant deux n{\oe}uds distincts par deux arcs orienté (ce qui donne un graphe symétrique). L'inverse n'est évidemment
+pas vrai !}
+
+\subsection[Multigraphe]{\sffamily\itshape Multigraphe}
+{
+Lorsqu'on admet que deux n{\oe}uds d'un graphe peuvent être rejoints par plusieurs arcs ou arêtes, on parle de
+\textbf{multigraphe}. Ce type de graphe est par exemple utilisé en chimie pour la représentation des molécules, un
+double lien représentant une liaison plus forte entre les atomes d'une molécule }
+
+{\centering
+ \includegraphics[width=5.172cm,height=5.974cm]{a2012Logique2eme-img044.jpg}  \ \ \ \ \ \ \ \ \ \ 
+\par}
+
+\subsection[Graphe pondéré]{\sffamily\itshape Graphe pondéré}
+{
+Lorsqu'on associe une valeur numérique à chaque arc ou arête d'un graphe, on obtient un \textbf{graphe pondéré}.
+L'exemple le plus connu d'un tel graphe est la carte routière sur laquelle on indique les distances le long des routes
+joignant deux points de repère. D'autres informations possibles sont le temps, le coût, le poids{\dots}}
+
+
+\bigskip
+
+{\centering
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \includegraphics[width=9.038cm,height=7.091cm]{a2012Logique2eme-img045.png} 
+\par}
+
+\subsection[Graphe étiqueté]{\sffamily\itshape Graphe étiqueté}
+{
+Un graphe est étiqueté lorsque ce sont des informations de type texte qui sont attachées sur chaque arc ou arête (par
+exemple les numéros des routes sur une carte routière : «~A19~» ou «~E40~»{\dots})}
+
+\subsection[2.3. Adjacence, incidence et degré]{\sffamily 2.3. Adjacence, incidence et degré}
+
+\bigskip
+
+{
+On dit que deux n{\oe}uds sont \textbf{adjacents} (ou \textbf{voisins}) s'il existe un arc (pour les graphes orientés)
+ou une arête (pour les graphes non orientés) reliant ces n{\oe}uds. L'adjacence s'applique aussi aux liens : deux arcs
+(ou deux arêtes) sont \textbf{adjacents} lorsqu'ils ont un n{\oe}ud en commun. Par contre, la relation entre les
+n{\oe}uds et les liens s'exprime en terme d'\textbf{incidence} : on dit qu'un arc ou une arête est \textbf{incident} à
+un n{\oe}ud.}
+
+
+\bigskip
+
+{
+Un graphe non orienté dans lequel chaque n{\oe}ud est adjacent à tous les autres n{\oe}uds est dit \textbf{complet}.
+Pour un graphe orienté, un graphe complet est tel qu'en chaque n{\oe}ud partent des arcs vers tous les autres
+n{\oe}uds. }
+
+\subsection[Le degré d{}'un n{\oe}ud est le nombre d{}'arcs (ou d{}'arêtes) incidents à ce n{\oe}ud. Dans le cas d{}'un
+graphe orienté, on définit encore~:]{\textmd{Le }degré\textmd{ d'un n{\oe}ud est le nombre d'arcs (ou d'arêtes)
+incidents à ce n{\oe}ud. Dans le cas d'un graphe orienté, on définit encore :}}
+\liststyleWWviiiNumxiv
+\begin{itemize}
+\item {
+le \textbf{degré entrant} d'un n{\oe}ud : c'est le nombre d'arcs qui arrivent en ce n{\oe}ud}
+\item {
+le \textbf{degré sortant} d'un n{\oe}ud : c'est le nombre d'arcs qui partent de ce n{\oe}ud}
+\end{itemize}
+{
+Toujours dans le cas des graphes orientés, un \textbf{puits} est un n{\oe}ud dont le degré sortant est nul : arrivé dans
+un puits, on ne peut plus en sortir ! Inversement, une \textbf{source} est un n{\oe}ud dont le degré entrant est nul.
+On peut donc partir d'une source, mais on ne peut plus jamais y revenir ! Si les degrés entrant et sortant sont tous
+les deux nuls, on a alors un n{\oe}ud isolé.}
+
+{
+Exemple : dans le graphe ci-dessous, le n{\oe}ud 8 est de degré 3 ; son degré entrant est 2 et son degré sortant est 1.
+Les n{\oe}uds 1, 3 et 5 sont des sources, et les n{\oe}uds 6 et 7 sont des puits.}
+
+\subsubsection[]{ \includegraphics[width=7.527cm,height=4.56cm]{a2012Logique2eme-img046.jpg} }
+{
+Remarque : une boucle compte pour deux dans le calcul du degré d'un n{\oe}ud, que ce soit dans un graphe orienté ou non
+orienté.}
+
+\subsubsection[2.4. Chemin, cycle et connexité]{\sffamily 2.4. Chemin, cycle et connexité}
+\subsubsection[Chemin]{\sffamily\itshape Chemin}
+{
+Dans un graphe orienté, un \textbf{chemin} est une suite d'arcs adjacents de la forme :}
+
+
+\bigskip
+
+{\centering
+(\textit{u}\textsubscript{0}, \textit{u}\textsubscript{1}), (\textit{u}\textsubscript{1}, \textit{u}\textsubscript{2}),
+(\textit{u}\textsubscript{2}, \textit{u}\textsubscript{3}), {\dots},
+(\textit{u}\textit{\textsubscript{n}}\textsubscript{{}-1}, \textit{u}\textit{\textsubscript{n}})
+\par}
+
+
+\bigskip
+
+{
+Dans cette suite, chaque arc part du n{\oe}ud où arrive l'arc précédent. Dans un graphe non orienté, la définition est
+analogue : un chemin (aussi appelé \textbf{chaine} dans ce cas) est une suite d'arêtes adjacentes. }
+
+{
+Un chemin est \textbf{simple} si tous ses arcs (ou arêtes) sont distincts. N.B. : dans tout ce qui suit, nous ne
+considérerons uniquement que les chemins simples.}
+
+
+\bigskip
+
+{
+Un chemin est \textbf{élémentaire} si tous ses n{\oe}uds (sauf éventuellement le premier et le dernier) sont distincts.
+}
+
+
+\bigskip
+
+{
+La \textbf{longueur} d'un chemin est le nombre d'arcs (ou d'arêtes) qui composent ce chemin. La \textbf{distance} entre
+deux n{\oe}uds est le minimum des longueurs parmi tous les chemins qui relient ces deux n{\oe}uds. Enfin, le
+\textbf{diamètre} d'un graphe est la plus grande distance possible entre deux n{\oe}uds quelconques de ce graphe.}
+
+
+\bigskip
+
+{
+N.B. : on pourrait aussi décrire un chemin en donnant une suite de n{\oe}uds adjacents plutôt qu'une suite d'arcs ou
+d'arêtes.}
+
+
+\bigskip
+
+{
+Exemple. La suite d'arêtes \{2, 3\}, \{3, 4\}, \{4, 5\}, \{5, 6\}, \{6, 7\} du graphe non orienté ci-dessous forme un
+chemin de longueur 5. La distance entre les n{\oe}uds 2 et 7 est toutefois 3, car la longueur du chemin \{2, 3\}, \{3,
+4\}, \{4, 7\} est plus courte. Le diamètre de ce graphe est 5.}
+
+
+\bigskip
+
+{\centering  \includegraphics[width=8.641cm,height=3.542cm]{a2012Logique2eme-img047.jpg} \par}
+\subsubsection[Circuits et cycles]{\sffamily\itshape Circuits et cycles}
+{
+Dans un graphe orienté, un \textbf{circuit} est un chemin fermé, c'est-à-dire une suite d'au minimum 2 arcs dont le
+n{\oe}ud de départ est identique au n{\oe}ud d'arrivée. Pour un graphe non orienté, on parle plutôt de \textbf{cycle~}:
+c'est également un chemin fermé constitué d'au moins 3 arêtes adjacentes. Un circuit (ou un cycle) est \textbf{simple}
+ou \textbf{élémentaire} selon que le chemin correspondant peut être qualifié de la même façon. }
+
+
+\bigskip
+
+{
+Dans l'exemple ci-dessus, la suite d'arêtes \{4, 5\}, \{5, 6\}, \{6, 7\}, \{7, 4\} forme un cycle élémentaire de
+longueur 4.}
+
+\subsubsection[Connexité]{\sffamily\itshape Connexité}
+{
+Un graphe \textbf{non orienté} est \textbf{connexe} (ou \textbf{connecté}) s'il existe toujours un chemin reliant deux
+n{\oe}uds quelconques de ce graphe. Autrement dit, un graphe connexe est «~d'un seul tenant~». }
+
+{
+Une \textbf{composante connexe} d'un graphe est un sous-ensemble de n{\oe}uds et d'arêtes de ce graphe formant lui-même
+un graphe connexe, et tel qu'il n'existe aucun chemin reliant un de ses n{\oe}uds à un n{\oe}ud hors de ce
+sous-ensemble.}
+
+{
+Pour un graphe \textbf{orienté}, la définition de connexité est analogue, toutefois en considérant les arcs sans leur
+orientation.}
+
+{
+Un graphe connexe ne possédant aucun cycle est un \textbf{arbre}, et un graphe dont toutes les composantes connexes sont
+des arbres est une \textbf{forêt}. Attention, ne pas confondre cette définition d'arbre avec les arbres binaires et
+\textit{n}{}-aires étudiés précédemment. Dans le contexte d'un graphe, il n'y a pas de notion de racine, de niveau,
+d'hauteur, de n{\oe}uds père et fils, etc. Par contre, les n{\oe}uds d'un arbre qui sont de degré 1 portent aussi le
+nom de \textbf{feuilles}.}
+
+{
+Exemple. Dans le graphe suivant, il y a trois composantes connexes, respectivement formées par les sous-ensembles de
+n{\oe}uds \{1, 2, 3, 4, 5, 6, 7, 8, 9\}, \{10, 11, 12\} et \{13, 14, 15\}. La 3\textsuperscript{ème} de ces composantes
+est un arbre.}
+
+{\centering  \includegraphics[width=6.235cm,height=3.955cm]{a2012Logique2eme-img048.jpg} \par}
+\section[3. Implémentation en mémoire]{\sffamily 3. Implémentation en mémoire}
+\subsection[3.1. Représentation des n{\oe}uds ]{\sffamily 3.1. Représentation des n{\oe}uds }
+{
+Dans les exemples précédents, les n{\oe}uds des graphes étaient nommés par des lettres ou des numéros, mais ils peuvent
+contenir de l'information diverse. Par ex. dans le graphe d'un réseau de métro, les n{\oe}uds seraient des chaines
+(noms des stations) ; en théorie des jeux, les n{\oe}uds peuvent contenir la configuration complète de l'état d'un jeu,
+les arêtes représentant alors les possibilités de passage d'une configuration à une autre. Le type des n{\oe}uds
+détermine le type du graphe : on parlera d'un graphe d'entiers, de chaines{\dots} et de façon générique, d'un graphe de
+type T.}
+
+{
+Le contenu des n{\oe}uds peut être stocké dans un tableau ou une liste, selon le contexte. Un tableau convient bien pour
+implémenter un problème de graphe «~statique~» (ou le nombre de n{\oe}uds reste fixe) et la liste pour la modélisation
+d'un graphe qui subirait des transformations (ajout ou suppression de n{\oe}uds). Dans tous les cas, on considère qu'il
+est toujours possible de numéroter les n{\oe}uds de 1 à \textit{n}.}
+
+\subsection[3.2. Représentation des arcs/arêtes]{\sffamily 3.2. Représentation des arcs/arêtes}
+{\sffamily\bfseries\itshape
+Représentation matricielle}
+
+{
+La représentation matricielle est la façon la plus évidente pour représenter les arêtes d'un graphe. Si seule
+l'existence des liens doit être représentée, on utilise une matrice de booléens appelée \textbf{matrice d'adjacence}
+(ou \textbf{matrice de contiguïté}). Chaque ligne et chaque colonne de cette matrice correspond à un n{\oe}ud du
+graphe, conformément à la numérotation des n{\oe}uds choisie. }
+
+{
+Pour un graphe orienté, les lignes correspondent à l'origine des arcs et les colonnes à leur extrémité. Ainsi, l'élément
+d'indices (\textit{i}, \textit{j}) sera \textbf{vrai} si un arc part de \textit{i} et arrive en \textit{j}.}
+
+{
+Exemple. Le graphe orienté ci-dessous à gauche peut être représenté par la matrice d'adjacence à droite.}
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{7.0350003cm}m{0.81600004cm}m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|}
+\centering  \includegraphics[width=4.318cm,height=3.859cm]{a2012Logique2eme-img049.png}  &
+~
+ &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ A}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ B}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ C}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ D}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering\arraybslash{ E}}\\\hhline{~~~-----}
+ &
+~
+ &
+\centering{ A} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~~~-----}
+ &
+~
+ &
+\centering{ B} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering\arraybslash{ V}\\\hhline{~~~-----}
+ &
+~
+ &
+\centering{ C} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering\arraybslash{ V}\\\hhline{~~~-----}
+ &
+~
+ &
+\centering{ D} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering{ F} &
+\centering\arraybslash{ F}\\\hhline{~~~-----}
+ &
+~
+ &
+\centering{ E} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering\arraybslash{ F}\\\hhline{~~~-----}
+ &
+~
+ &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+}\\
+\end{supertabular}
+\end{center}
+{
+Dans le cas d'un graphe non orienté, l'élément d'indices (\textit{i}, \textit{j}) est mis à \textbf{vrai} si une arête
+rejoint les n{\oe}uds \textit{i} et \textit{j}. Comme cette relation est symétrique, la matrice d'adjacence qui en
+résulte est une \textbf{matrice symétrique}, c'est-à-dire que \textit{m}\textit{\textsubscript{ij}} =
+\textit{m}\textit{\textsubscript{ji}} ${\forall}$ \textit{i}, \textit{j}. Par économie, on peut aussi se limiter dans
+ce cas à une \textbf{matrice triangulaire}, ou seule une moitié de la matrice est utilisée (par exemple les éléments
+\textit{m}\textit{\textsubscript{ij}} tels que \textit{j} ${\geq}$ \ \textit{i} s'il y a des boucles et \textit{j}
+> \textit{i} sinon).}
+
+{
+Exemple. Le graphe non orienté de la figure ci-dessous peut être représenté par une matrice symétrique (à gauche) ou
+triangulaire supérieure (à droite).}
+
+
+\bigskip
+
+{\centering  \includegraphics[width=3.784cm,height=3.233cm]{a2012Logique2eme-img050.jpg} \par}
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{0.93900007cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|}
+\multicolumn{1}{m{0.93900007cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ A}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ B}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ C}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ D}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ E}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ F}} &
+~
+ &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ A}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ B}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ C}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ D}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ E}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering\arraybslash{ F}}\\\hhline{~------~~------}
+\centering{ A} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+~
+ &
+\centering{ A} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering\arraybslash{ F}\\\hhline{~------~~------}
+\centering{ B} &
+\centering{ V} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+~
+ &
+\centering{ B} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+\centering\arraybslash{ F}\\\hhline{~------~~------}
+\centering{ C} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ V} &
+~
+ &
+\centering{ C} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering\arraybslash{ V}\\\hhline{~------~~------}
+\centering{ D} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+~
+ &
+\centering{ D} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~------~~------}
+\centering{ E} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ V} &
+~
+ &
+\centering{ E} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering\arraybslash{ V}\\\hhline{~------~~------}
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ F} &
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering\arraybslash{ F}\\\hhline{~------~~------}
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+{
+La représentation matricielle peut s'étendre aux cas des graphes pondérés (en utilisant une matrice d'entiers contenant
+les poids des arêtes) ou d'un graphe étiqueté (matrice de chaines). L'absence d'arc entre deux n{\oe}uds peut alors
+être signalée par des valeurs aberrantes (par exemple --1 \ ou «~infini~» pour des distances, «~rien~» pour le graphe
+étiqueté{\dots}).}
+
+{
+N.B. : Quelle que soit la configuration choisie, la représentation matricielle est cependant coûteuse en mémoire, car
+beaucoup d'éléments restent en général inoccupés. La matrice creuse (voir ex. dans le chapitre sur les listes chainées)
+est plus appropriée à ce type de contenu.}
+
+\subsection[Représentation par un tableau de listes]{\sffamily\itshape Représentation par un tableau de listes}
+{
+L'idée est de faire correspondre à chaque n{\oe}ud la liste des n{\oe}uds qui lui sont adjacents (pour un graphe
+orienté, ce sera la liste des n{\oe}uds pour lesquels un arc part du n{\oe}ud considéré). Ces listes (qui peuvent
+éventuellement être chainées) sont contenues dans un tableau, le \textbf{tableau des listes d'adjacence}, dont les
+indices correspondent à la numérotation des n{\oe}uds. Les variantes de ce type de représentation sont nombreuses.}
+
+{
+L'avantage principal de cette représentation est le gain de place en mémoire. Le désavantage est la perte de l'accès
+direct à l'information : dans la matrice, on voit directement si \textit{i} et \textit{j} sont adjacents, dans le cas
+du tableau, il faut faire une recherche pour voir si \textit{j} se trouve dans la liste d'indice \textit{i}.}
+
+{
+Exemple : voici une représentation du graphe orienté de la page précédente sous forme de tableau de listes.}
+
+{\centering  \includegraphics[width=5.715cm,height=3.784cm]{a2012Logique2eme-img051.png} \par}
+\section[4. Problèmes divers]{\sffamily 4. Problèmes divers}
+\subsection[4.1. Accessibilité d{}'un n{\oe}ud à partir d{}'un autre]{\sffamily 4.1. Accessibilité d'un n{\oe}ud à
+partir d'un autre}
+{
+Un n{\oe}ud \textit{j} est \textbf{accessible} à partir d'un n{\oe}ud \textit{i} s'il existe un chemin partant de
+\textit{i} et arrivant à \textit{j}. L'accessibilité peut donc exister pour deux n{\oe}uds non adjacents. Dans un
+graphe non orienté, l'accessibilité est assez évidente à établir : tous les n{\oe}uds d'une composante connexe du
+graphe sont forcément accessibles. Le problème est moins immédiat et plus intéressant pour les graphes orientés, et
+nous ne considérerons que ceux-ci dans cette section.}
+
+{\sffamily\bfseries\itshape
+Matrice d'accessibilité}
+
+{
+Similairement à la matrice d'adjacence (qui indique si un n{\oe}ud \textit{i} est en contact direct avec un n{\oe}ud
+\textit{j}), la \textbf{matrice d'accessibilité} est une matrice booléenne qui indique si à partir d'un n{\oe}ud
+\textit{i}, il existe un chemin qui mène au n{\oe}ud \textit{j}. Comme précédemment, l'indice ligne \textit{i} est
+associé à l'origine et l'indice colonne \textit{j} à l'arrivée du chemin.}
+
+{
+Exemple. Voici un graphe et sa matrice d'accessibilité. On voit facilement que tous les n{\oe}uds sont accessibles à
+partir des n{\oe}uds 1 et 2. Par contre, les n{\oe}uds 3, 4 et 5 forment un cycle de longueur 3 duquel il n'est plus
+possible de retourner en 1 ou en 2.}
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{7.0350003cm}m{0.81600004cm}m{0.81600004cm}m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|}
+\centering  \includegraphics[width=4.355cm,height=4.247cm]{a2012Logique2eme-img052.jpg}  &
+~
+ &
+~
+ &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+}\\\hhline{~~~~-----}
+ &
+~
+ &
+~
+ &
+~
+ &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~~~~-----}
+ &
+~
+ &
+~
+ &
+~
+ &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~~~~-----}
+ &
+~
+ &
+~
+ &
+\centering{ \textit{A} =} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~~~~-----}
+ &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~~~~-----}
+ &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~~~~-----}
+ &
+~
+ &
+~
+ &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{~
+}\\
+\end{supertabular}
+\end{center}
+{
+Nous allons voir deux façons de générer la matrice d'accessibilité en partant de la matrice d'adjacence d'un graphe.}
+
+{\sffamily\bfseries\itshape
+Petit rappel de calcul matriciel}
+
+{
+La somme de deux matrices de mêmes dimensions s'obtient en additionnant les éléments de mêmes indices dans les deux
+matrices, par exemple :}
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.601cm}m{0.601cm}m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.601cm}m{0.601cm}m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.61800003cm}|}
+\hhline{---~~~---~~~---}
+\centering{ 1} &
+\centering{ 0} &
+\centering{ 4} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ 3} &
+\centering{ 2} &
+\centering{ 1} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ 4} &
+\centering{ 2} &
+\centering\arraybslash{ 5}\\\hhline{---~~~---~~~---}
+\centering{ {}--2} &
+\centering{ 2} &
+\centering{ 1} &
+~
+ &
+\centering{ +} &
+~
+ &
+\centering{ 2} &
+\centering{ 0} &
+\centering{ 3} &
+~
+ &
+\centering{ =} &
+~
+ &
+\centering{ 0} &
+\centering{ 2} &
+\centering\arraybslash{ 4}\\\hhline{---~~~---~~~---}
+\centering{ 3} &
+\centering{ 0} &
+\centering{ {}--1} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ {}--2} &
+\centering{ 2} &
+\centering{ 0} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ 1} &
+\centering{ 2} &
+\centering\arraybslash{ {}--1}\\\hhline{---~~~---~~~---}
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+{
+La multiplication est un peu plus complexe : l'élément d'indices (\textit{i}, \textit{j}) du produit de deux matrices
+est le \textit{produit scalaire} de la \textit{i}\textsuperscript{ème} ligne de la première matrice par la
+\textit{j}\textsuperscript{ème} colonne de la seconde. Le produit scalaire de deux vecteurs (ou tableaux) de même
+taille est la somme des produits des éléments de mêmes indices dans ces vecteurs. En formule cela donne :}
+
+\begin{equation*}
+(\normalsubformula{\text{AB}})_{\normalsubformula{\text{ij}}}=\overset n{\underset{k=1}{\sum
+}}A_{\normalsubformula{\text{ik}}}B_{\normalsubformula{\text{kj}}}
+\end{equation*}
+{
+Attention, le produit matriciel n'est pas commutatif, donc AB ${\neq}$ \ BA en général.}
+
+{
+Exemple : pour obtenir l'élément d'indices (2, 1) du produit, on calcule le produit scalaire de la
+2\textsuperscript{ème} ligne de la 1\textsuperscript{ère} matrice et de la 1\textsuperscript{ère} colonne de la
+2\textsuperscript{ème}, soit --2*3 + 2*2 + 1*(--2) = --4.}
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.601cm}m{0.601cm}m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.601cm}m{0.601cm}m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.61800003cm}|}
+\hhline{---~~~---~~~---}
+\centering{ 1} &
+\centering{ 0} &
+\centering{ 4} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ 3} &
+\centering{ 2} &
+\centering{ 1} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ {}--5} &
+\centering{ 10} &
+\centering\arraybslash{ 1}\\\hhline{---~~~---~~~---}
+\centering{ {}--2} &
+\centering{ 2} &
+\centering{ 1} &
+~
+ &
+\centering{ *} &
+~
+ &
+\centering{ 2} &
+\centering{ 0} &
+\centering{ 3} &
+~
+ &
+\centering{ =} &
+~
+ &
+\centering{ {}--4} &
+\centering{ {}--2} &
+\centering\arraybslash{ 4}\\\hhline{---~~~---~~~---}
+\centering{ 3} &
+\centering{ 0} &
+\centering{ {}--1} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ {}--2} &
+\centering{ 2} &
+\centering{ 0} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ 11} &
+\centering{ 4} &
+\centering\arraybslash{ 3}\\\hhline{---~~~---~~~---}
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+{
+Dans ce qui suit, nous serons amenés à calculer la somme et le produit de matrices booléennes. Le calcul est analogue,
+en remplaçant toutefois les opérateurs + et * respectivement par les opérateurs logiques OU et ET.}
+
+{
+Exemple : somme et produit de deux matrices booléennes.}
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.601cm}m{0.601cm}m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.601cm}m{0.601cm}m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.61800003cm}|}
+\hhline{---~~~---~~~---}
+{ V} &
+{ F} &
+{ V} &
+~
+ &
+~
+ &
+~
+ &
+{ V} &
+{ V} &
+{ F} &
+~
+ &
+~
+ &
+~
+ &
+{ V} &
+{ V} &
+{ V}\\\hhline{---~~~---~~~---}
+{ V} &
+{ V} &
+{ F} &
+~
+ &
+{ +} &
+~
+ &
+{ V} &
+{ F} &
+{ V} &
+~
+ &
+{ =} &
+~
+ &
+{ V} &
+{ V} &
+{ V}\\\hhline{---~~~---~~~---}
+{ F} &
+{ V} &
+{ F} &
+~
+ &
+~
+ &
+~
+ &
+{ F} &
+{ F} &
+{ F} &
+~
+ &
+~
+ &
+~
+ &
+{ F} &
+{ V} &
+{ F}\\\hhline{---~~~---~~~---}
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.601cm}m{0.601cm}m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.601cm}m{0.601cm}m{0.601cm}|m{0.601cm}|m{0.601cm}|m{0.61800003cm}|}
+\hhline{---~~~---~~~---}
+{ V} &
+{ F} &
+{ V} &
+~
+ &
+~
+ &
+~
+ &
+{ V} &
+{ V} &
+{ F} &
+~
+ &
+~
+ &
+~
+ &
+{ V} &
+{ V} &
+{ F}\\\hhline{---~~~---~~~---}
+{ V} &
+{ V} &
+{ F} &
+~
+ &
+{ *} &
+~
+ &
+{ V} &
+{ F} &
+{ V} &
+~
+ &
+{ =} &
+~
+ &
+{ V} &
+{ V} &
+{ V}\\\hhline{---~~~---~~~---}
+{ F} &
+{ V} &
+{ F} &
+~
+ &
+~
+ &
+~
+ &
+{ F} &
+{ F} &
+{ F} &
+~
+ &
+~
+ &
+~
+ &
+{ V} &
+{ F} &
+{ V}\\\hhline{---~~~---~~~---}
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+{
+Le premier élément du produit est obtenu en calculant (V ET V) OU (F ET V) OU (V ET F) ${\equiv}$ V.}
+
+{
+A partir du produit matriciel, on définit encore l'élévation à une puissance d'une matrice~carrée (c'est-à-dire une
+matrice ayant autant de lignes que de colonnes) : \textit{A}\textsuperscript{2} = \textit{A}*\textit{A},
+\textit{A}\textsuperscript{3} = \textit{A}*\textit{A}\textsuperscript{2}, et récursivement
+\textit{A}\textit{\textsuperscript{n}} = \textit{A}*\textit{A}\textit{\textsuperscript{n}}\textsuperscript{ -- 1}.}
+
+{\sffamily\bfseries\itshape
+Puissances de la matrice d'adjacence}
+
+{
+Si \textit{M} est la matrice d'adjacence d'un graphe orienté, alors la \textit{k}\textsuperscript{ème} puissance de
+\textit{M} possède la propriété suivante : (\textit{M}\textit{\textsuperscript{k}})\textit{\textsubscript{ij}} est vrai
+si et seulement s'il existe un chemin de longueur \textit{k} partant de \textit{i} et arrivant à \textit{j}.}
+
+{
+\foreignlanguage{french}{En effet, comme } $(M^2)_{\normalsubformula{\text{ij}}}=\overset n{\underset{k=1}{\sum
+}}M_{\normalsubformula{\text{ik}}}\ast M_{\normalsubformula{\text{kj}}}$\foreignlanguage{french}{, cette somme donne
+vrai s'il existe au moins un }\foreignlanguage{french}{\textit{k}}\foreignlanguage{french}{ pour lequel
+}\foreignlanguage{french}{\textit{M}}\foreignlanguage{french}{\textit{\textsubscript{ik}}}\foreignlanguage{french}{ et
+}\foreignlanguage{french}{\textit{M}}\foreignlanguage{french}{\textit{\textsubscript{kj}}}\foreignlanguage{french}{
+sont vrais simultanément, autrement dit s'il existe un n{\oe}ud
+}\foreignlanguage{french}{\textit{k}}\foreignlanguage{french}{ où arrive un arc partant de
+}\foreignlanguage{french}{\textit{i}}\foreignlanguage{french}{, et d'où part un arc allant vers
+}\foreignlanguage{french}{\textit{j}}\foreignlanguage{french}{, et donc s'il existe un chemin de longueur 2 entre
+}\foreignlanguage{french}{\textit{i}}\foreignlanguage{french}{ et
+}\foreignlanguage{french}{\textit{j}}\foreignlanguage{french}{. Par récurrence, on prouve facilement que la propriété
+est valide pour les puissances suivantes.}}
+
+{
+Supposons maintenant qu'au moins un élément (\textit{i}, \textit{j}) parmi les matrices \textit{M},
+\textit{M}\textsuperscript{2}, \textit{M}\textsuperscript{3}, {\dots}, \textit{M}\textit{\textsuperscript{n}} est vrai
+(où \textit{n} est le nombre de n{\oe}uds du graphe), alors il existe au moins un chemin (de longueur maximale
+\textit{n}) entre les n{\oe}uds \textit{i} et \textit{j}. On en déduit la formule suivante pour la matrice
+d'accessibilité :}
+
+\begin{equation*}
+A=M+M^2+M^3+\cdots +M^n=\overset n{\underset{k=1}{\sum }}M^k
+\end{equation*}
+{
+Exemple. Calculons les puissances successives de la matrice d'adjacence du graphe précédent :}
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{0.93900007cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.541cm}m{0.731cm}m{1.176cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.83400005cm}|}
+\hhline{~-----~~~-----}
+~
+ &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ F} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ V} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ V} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ F}\\\hhline{~-----~~~-----}
+\centering{ \textit{M}\textsuperscript{ }=} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+~
+ &
+~
+ &
+\centering{ \textit{M}\textsuperscript{2 }=} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering\arraybslash{ V}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering\arraybslash{ F}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering\arraybslash{ F}\\\hhline{~-----~~~-----}
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{0.93900007cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.541cm}m{0.731cm}m{1.176cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.83400005cm}|}
+\hhline{~-----~~~-----}
+~
+ &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ V} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ V} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~-----~~~-----}
+\centering{ \textit{M}\textsuperscript{3 }=} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+~
+ &
+~
+ &
+\centering{ \textit{M}\textsuperscript{4 }=} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering\arraybslash{ F}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering\arraybslash{ V}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering\arraybslash{ F}\\\hhline{~-----~~~-----}
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{0.93900007cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.541cm}m{0.731cm}m{1.176cm}m{0.81600004cm}m{0.81600004cm}m{0.81600004cm}m{0.81600004cm}m{0.81600004cm}}
+\hhline{~-----~~~~~~~~}
+~
+ &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+\\\hhline{~-----~~~~~~~~}
+~
+ &
+\centering{ V} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+\\\hhline{~-----~~~~~~~~}
+\centering{ \textit{M}\textsuperscript{5 }=} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+\\\hhline{~-----~~~~~~~~}
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+\\\hhline{~-----~~~~~~~~}
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+ &
+~
+\\\hhline{~-----~~~~~~~~}
+\end{supertabular}
+\end{center}
+{
+On vérifie facilement qu'en additionnant (logiquement) les 5 matrices, on obtient bien la matrice d'accessibilité.}
+
+{
+Remarques.}
+
+\liststyleWWviiiNumxiii
+\begin{enumerate}
+\item {
+Si on travaille avec des matrices à valeurs entières plutôt que booléennes (c'est-à-dire avec \ 1 pour \textbf{vrai} et
+0 pour \textbf{faux}), (\textit{M}\textit{\textsuperscript{k}})\textit{\textsubscript{ij}} représente alors le nombre
+de chemins de longueur \textit{k} allant de \textit{i} à \textit{j}.\textit{ }La somme des puissances de la matrice
+d'adjacence donne alors le nombre de chemins allant de \textit{i} à \textit{j} de longueur~inférieure ou égale à
+\textit{n} (nombre de n{\oe}uds).}
+\item {
+L'algorithme qui découle de cette formule ne présente aucune difficulté d'élaboration. Il est cependant moins performant
+que celui de Roy-Warshall que nous présentons ci-dessous.}
+\item {
+Le graphe obtenu à partir de la matrice d'accessibilité s'appelle la \textbf{fermeture transitive} du graphe de départ
+ou encore \textbf{graphe d'accessibilité}.}
+\end{enumerate}
+{\sffamily\bfseries\itshape
+Algorithme de Roy-Warshall}
+
+{
+Soit \textit{P}\textit{\textsubscript{k}} la matrice booléenne définie de la façon suivante :
+\textit{P}\textit{\textsubscript{k}}[\textit{i}, \textit{j}] = \textbf{vrai} s'il existe un chemin du n{\oe}ud
+\textit{i} au n{\oe}ud \textit{j} dont les indices des autres n{\oe}uds valent au maximum \textit{k} (autrement dit,
+qui n'utilise aucun autre n{\oe}ud intermédiaire que ceux d'indices 1 à \textit{k}). Cette matrice est définie pour les
+valeurs de \textit{k} entre 0 et \textit{n} inclus (\textit{n} étant le nombre de n{\oe}uds).}
+
+{
+Il résulte de cette définition que \textit{P}\textsubscript{0} est la matrice d'adjacence et que
+\textit{P}\textit{\textsubscript{n}} est la matrice d'accessibilité. L'algorithme de Roy-Warshall permet de calculer
+facilement \textit{P}\textit{\textsubscript{k}} à partir de \textit{P}\textit{\textsubscript{k}}\textsubscript{{}-1},
+et donc d'accéder en \textit{n} étapes à la matrice d'accessibilité. La règle de récurrence est la suivante :}
+
+{\centering
+\textit{P}\textit{\textsubscript{k}}[\textit{i}, \textit{j}] est vrai ${\Leftrightarrow}$
+\textit{P}\textit{\textsubscript{k-1}}[\textit{i}, \textit{j}] est vrai OU
+(\textit{P}\textit{\textsubscript{k-1}}[\textit{i}, \textit{k}] ET \textit{P}\textit{\textsubscript{k-1}}[\textit{k},
+\textit{j}] sont vrais)
+\par}
+
+{
+En effet, si \textit{P}\textit{\textsubscript{k-1}}[\textit{i}, \textit{j}] est vrai,
+\textit{P}\textit{\textsubscript{k}}[\textit{i}, \textit{j}] l'est forcément. Si
+\textit{P}\textit{\textsubscript{k-1}}[\textit{i}, \textit{k}] et \textit{P}\textit{\textsubscript{k-1}}[\textit{k},
+\textit{j}] sont tous deux vrais, cela veut dire qu'il existe un chemin allant de \textit{i} à \textit{k}, et un autre
+allant de \textit{k} à \textit{j}, chacun n'utilisant que les n{\oe}uds d'indices valant au maximum \textit{k }{}-- 1.
+En mettant ces deux chemins bout à bout, on obtient bien un chemin de \textit{i} à \textit{j} dont les indices des
+n{\oe}uds sont au maximum \textit{k}.}
+
+
+\bigskip
+
+{
+Un des avantages de l'algorithme est de pouvoir calculer les matrices \textit{P}\textit{\textsubscript{k}} dans un seul
+tableau. Une fois qu'un élément [i, j] est vrai, il reste vrai à toutes les étapes restantes. Le code de l'algorithme
+est le suivant :}
+
+
+\bigskip
+
+{
+\textsf{\textbf{module}}\textsf{ RoyWarshall(M}${\downarrow}$\textsf{, P}${\uparrow}$\textsf{ : tableaux[1 à n, 1 à n]
+de booléens)}}
+
+{\sffamily
+\ \ i, j, k : entiers}
+
+{
+\textsf{\ \ P }${\leftarrow}$\textsf{ M \ \ // initialisation de P avec une copie de la matrice d'adjacence}}
+
+{\sffamily
+\textbf{\ \ pour} k \textbf{de} 1 \textbf{à} n \textbf{faire}}
+
+{\sffamily
+\textbf{\ \ \ \ }// calcul des éléments de P\textsubscript{k}}
+
+{\sffamily
+\textbf{\ \ \ \ pour} i \textbf{de} 1 \textbf{à} n \textbf{faire}}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ pour} j \textbf{de} 1 \textbf{à} n \textbf{faire}}
+
+{
+\foreignlanguage{french}{\textsf{\ \ \ \ \ \ \ \ }}\foreignlanguage{english}{\textsf{P[i, j]
+}}\foreignlanguage{english}{${\leftarrow}$}\foreignlanguage{english}{\textsf{ P[i, j]
+}}\foreignlanguage{english}{\textsf{\textbf{ou}}}\foreignlanguage{english}{\textsf{ (P[i, k]
+}}\foreignlanguage{english}{\textsf{\textbf{et}}}\foreignlanguage{english}{\textsf{ P[k, j])}}}
+
+{\sffamily\bfseries
+\foreignlanguage{english}{\ \ \ \ \ \ }\foreignlanguage{french}{fin pour}}
+
+{\sffamily\bfseries
+\ \ \ \ fin pour}
+
+{\sffamily\bfseries
+\ \ fin pour}
+
+{\sffamily
+\ \ // P contient à présent la matrice d'accessibilité}
+
+{\sffamily\bfseries
+fin}
+
+
+\bigskip
+
+{
+Exemple. Toujours pour le même graphe, voici les états successifs de la matrice obtenue par l'algorithme de
+Roy-Warshall. Les nouveaux éléments devenus à vrai sont indiqués en grisé.}
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{0.93900007cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.541cm}m{0.731cm}m{1.176cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.83400005cm}|}
+\hhline{~-----~~~-----}
+~
+ &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ F} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ F}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ V} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ F}\\\hhline{~-----~~~-----}
+\centering{ \textit{P}\textsubscript{0}\textsuperscript{ }=} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+~
+ &
+~
+ &
+\centering{ \textit{P}\textsubscript{1}\textsuperscript{ }=} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering\arraybslash{ F}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering\arraybslash{ V}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering\arraybslash{ F}\\\hhline{~-----~~~-----}
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{0.93900007cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.541cm}m{0.731cm}m{1.176cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.83400005cm}|}
+\hhline{~-----~~~-----}
+~
+ &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ F} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ F}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ F} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ F}\\\hhline{~-----~~~-----}
+\centering{ \textit{P}\textsubscript{2}\textsuperscript{ }=} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+~
+ &
+~
+ &
+\centering{ \textit{P}\textsubscript{3}\textsuperscript{ }=} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering\arraybslash{ F}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering\arraybslash{ V}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ F}\\\hhline{~-----~~~-----}
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{0.93900007cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.541cm}m{0.731cm}m{1.176cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.83400005cm}|}
+\hhline{~-----~~~-----}
+~
+ &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~-----~~~-----}
+\centering{ \textit{P}\textsubscript{4}\textsuperscript{ }=} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+~
+ &
+~
+ &
+\centering{ \textit{P}\textsubscript{5}\textsuperscript{ }=} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~-----~~~-----}
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering{ V} &
+~
+ &
+~
+ &
+~
+ &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ V} &
+\centering\arraybslash{ V}\\\hhline{~-----~~~-----}
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+\subsection{}
+\subsection[4.2. Problèmes d{}'optimisation]{\sffamily 4.2. Problèmes d'optimisation}
+{
+Ce type de problèmes s'applique aux graphes pondérés, orientés ou non. Il en existe beaucoup de variantes :
+détermination du chemin de poids ou de coût minimum, de la distance minimale ou du chemin le plus court entre deux
+n{\oe}uds d'un graphe, du chemin de poids minimum passant par tous les n{\oe}uds d'un graphe (problème du voyageur de
+commerce), la recherche de l'arbre de poids minimum inclut dans un graphe (algorithme de Kruskal), etc.}
+
+{
+Pour représenter un graphe pondéré, on utilise une matrice des poids (entiers ou réels) \textit{W}, ou \textit{Wij} est
+une valeur positive représentant le poids de l'arc existant entre les n{\oe}uds \textit{i} et \textit{j}. L'absence
+d'arc doit être signalée par une valeur aberrante, qui selon le contexte peut être négative, nulle ou infinie. Dans le
+cas de la recherche du minimum, les arcs inexistants doivent être initialisés à une valeur «~infinie~» (plus
+techniquement une constante du type \textit{highest value}).}
+
+{
+Une légère modification de l'algorithme de Roy-Warshall permet de construire la matrice \textit{P} des poids minimum
+entre les différents n{\oe}uds d'un graphe. A l'étape \textit{k}, on compare la valeur
+\textit{P}\textit{\textsubscript{ij}} connue jusque là avec le poids d'un chemin passant par le n{\oe}ud \textit{k}. Si
+ce détour s'avère plus coûteux, on garde \textit{P}\textit{\textsubscript{ij}} ; si par contre le détour par le
+n{\oe}ud \textit{k} allège le poids, \textit{P}\textit{\textsubscript{ij}} est remplacé alors par le poids de ce
+nouveau chemin, soit \textit{P}\textit{\textsubscript{ik}} + \textit{P}\textit{\textsubscript{kj}}. }
+
+
+\bigskip
+
+{
+\textsf{\textbf{module}}\textsf{ poidsMinimum(W}${\downarrow}$\textsf{, P}${\uparrow}$\textsf{ : tableaux[1 à n, 1 à n]
+d'entiers)\ \ // réels}}
+
+{\sffamily
+\ \ i, j, k : entiers}
+
+{
+\textsf{\ \ P }${\leftarrow}$\textsf{ W \ \ // initialisation de P avec une copie de la matrice des poids}}
+
+{\sffamily
+\textbf{\ \ pour} k \textbf{de} 1 \textbf{à} n \textbf{faire}}
+
+{\sffamily
+\textbf{\ \ \ \ pour} i \textbf{de} 1 \textbf{à} n \textbf{faire}}
+
+{\sffamily
+\textbf{\ \ \ \ \ \ pour} j \textbf{de} 1 \textbf{à} n \textbf{faire}}
+
+{
+\foreignlanguage{french}{\textsf{\ \ \ \ \ \ \ \ }}\foreignlanguage{english}{\textsf{P[i, j]
+}}\foreignlanguage{english}{${\leftarrow}$}\foreignlanguage{english}{\textsf{ min(P[i, j], P[i, k] + P[k, j])}}}
+
+{\sffamily\bfseries
+\foreignlanguage{english}{\ \ \ \ \ \ }\foreignlanguage{french}{fin pour}}
+
+{\sffamily\bfseries
+\ \ \ \ fin pour}
+
+{\sffamily\bfseries
+\ \ fin pour}
+
+{\sffamily
+\ \ // P contient à présent la matrice des poids minimum}
+
+{\sffamily\bfseries
+fin}
+
+
+\bigskip
+
+{
+Exemple. Voici pour le graphe suivant les contenus des matrices obtenues à chaque étape de l'algorithme de recherche des
+poids minimum.}
+
+{\centering  \includegraphics[width=5.5cm,height=3.782cm]{a2012Logique2eme-img053.jpg} \par}
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{|m{0.40000004cm}|m{0.40000004cm}|m{0.40000004cm}|m{0.40000004cm}|m{0.611cm}|m{0.435cm}|m{0.454cm}|m{0.40000004cm}|m{0.40000004cm}|m{0.486cm}|m{0.435cm}|m{0.58cm}|m{0.40000004cm}|m{0.537cm}|m{0.56200004cm}|m{0.52000004cm}|m{0.435cm}|m{0.435cm}|m{0.435cm}|m{0.47400004cm}|m{0.40000004cm}|m{0.40000004cm}|m{0.40000004cm}|m{0.426cm}|}
+\multicolumn{4}{m{2.2cm}}{\centering{ état initial}} &
+\multicolumn{1}{m{0.611cm}}{~
+} &
+\multicolumn{4}{m{2.289cm}}{\centering{ k=1}} &
+\multicolumn{1}{m{0.486cm}}{~
+} &
+\multicolumn{4}{m{2.5519998cm}}{\centering{ k=2}} &
+\multicolumn{1}{m{0.56200004cm}}{~
+} &
+\multicolumn{4}{m{2.425cm}}{\centering{ k=3}} &
+\multicolumn{1}{m{0.47400004cm}}{~
+} &
+\multicolumn{4}{m{2.226cm}}{\centering{ k=4}}\\\hhline{----~----~----~----~----}
+\centering{ 7} &
+\centering{ 1} &
+\centering{ ${\infty}$} &
+\centering{ ${\infty}$} &
+~
+ &
+\centering{ 7} &
+\centering{ 1} &
+\centering{ ${\infty}$} &
+\centering{ ${\infty}$} &
+~
+ &
+\centering{ 3} &
+\centering{ 1} &
+\centering{ ${\infty}$} &
+\centering{ 3} &
+~
+ &
+\centering{ 3} &
+\centering{ 1} &
+\centering{ ${\infty}$} &
+\centering{ 3} &
+~
+ &
+\centering{ 3} &
+\centering{ 1} &
+{ 4} &
+\centering\arraybslash{ 3}\\\hhline{----~----~----~----~----}
+\centering{ 2} &
+\centering{ ${\infty}$} &
+\centering{ ${\infty}$} &
+\centering{ 2} &
+~
+ &
+\centering{ 2} &
+\centering{ 3} &
+\centering{ ${\infty}$} &
+\centering{ 2} &
+~
+ &
+\centering{ 2} &
+\centering{ 3} &
+\centering{ ${\infty}$} &
+\centering{ 2} &
+~
+ &
+\centering{ 2} &
+\centering{ 3} &
+\centering{ ${\infty}$} &
+\centering{ 2} &
+~
+ &
+\centering{ 2} &
+\centering{ 3} &
+{ 3} &
+\centering\arraybslash{ 2}\\\hhline{----~----~----~----~----}
+\centering{ ${\infty}$} &
+\centering{ 3} &
+\centering{ ${\infty}$} &
+\centering{ ${\infty}$} &
+~
+ &
+\centering{ ${\infty}$} &
+\centering{ 3} &
+\centering{ ${\infty}$} &
+\centering{ ${\infty}$} &
+~
+ &
+\centering{ 5} &
+\centering{ 3} &
+\centering{ ${\infty}$} &
+\centering{ 5} &
+~
+ &
+\centering{ 5} &
+\centering{ 3} &
+\centering{ ${\infty}$} &
+\centering{ 5} &
+~
+ &
+\centering{ 5} &
+\centering{ 3} &
+{ 6} &
+\centering\arraybslash{ 5}\\\hhline{----~----~----~----~----}
+\centering{ 7} &
+\centering{ ${\infty}$} &
+\centering{ 1} &
+\centering{ ${\infty}$} &
+~
+ &
+\centering{ 7} &
+\centering{ 8} &
+\centering{ 1} &
+\centering{ ${\infty}$} &
+~
+ &
+\centering{ 6} &
+\centering{ 8} &
+\centering{ 1} &
+\centering{ 10} &
+~
+ &
+\centering{ 6} &
+\centering{ 4} &
+\centering{ 1} &
+\centering{ 6} &
+~
+ &
+\centering{ 6} &
+\centering{ 4} &
+{ 1} &
+\centering\arraybslash{ 6}\\\hhline{----~----~----~----~----}
+\end{supertabular}
+\end{center}
+
+\bigskip
+
+{
+Remarque. L'algorithme ci-dessus détermine les poids minimum entre toutes les paires de n{\oe}uds du graphe. Il existe
+de nombreuses variantes, dont l'\textbf{algorithme de Dijkstra} qui recherche les poids uniquement entre un n{\oe}ud
+donné et les autres n{\oe}uds du graphe. Cet algorithme utilise seulement un tableau de \textit{n} valeurs (au lieu
+d'une matrice \textit{n} \textsf{x} \textit{n}).}
+
+\subsection[4.3. Parcours d{}'un graphe]{\sffamily 4.3. Parcours d'un graphe}
+{
+Comment parcourir les n{\oe}uds d'un graphe ? Plusieurs solutions sont possibles. On pourrait bien sûr les parcourir
+dans l'ordre de leur énumération, mais ce parcours ne tiendrait pas compte des liens entre les n{\oe}uds. Deux parcours
+particuliers apparaissent dans la théorie des graphes, selon le type de problème à résoudre : le parcours \textit{par
+contagion} et le parcours \textit{par sondage}.}
+
+{
+Au cours de l'exécution des algorithmes correspondant à ces parcours, chaque n{\oe}ud sera dans un des 3 états suivants
+: \textbf{Prêt} (état initial), \textbf{Attente }(en attente d'être traité) ou \textbf{Traité.}\ \ }
+
+{
+Ces états peuvent être stockés dans un tableau de chaines, ou éventuellement de booléens (en assimilant les états
+\textbf{Attente} et \textbf{Traité} en un seul état «~\textbf{Visité}~»). Dans les deux algorithmes ci-dessous, la
+détermination des n{\oe}uds voisins est très aisée, que ce soit par la matrice d'adjacence ou par le tableau de listes.
+Les algorithmes sont rédigés en «~macro-logique~», afin de pouvoir les adapter facilement selon le choix de la
+représentation choisie.}
+
+\subsubsection[Parcours par contagion]{\sffamily\itshape Parcours par contagion}
+{
+A partir d'un n{\oe}ud de départ, on visite d'abord ses voisins, puis les voisins des voisins et ainsi de suite{\dots}
+On visite donc le graphe par «~couches~», d'abord les voisins dans l'entourage immédiat, puis on s'éloigne petit à
+petit de plus en plus loin{\dots}}
+
+
+\bigskip
+
+{\sffamily
+\textbf{module} ParcoursContagion(départ, {\dots}) \ \ // la représentation du graphe n'est pas précisée ici}
+
+{\sffamily
+\ \ initialiser tous les états des n{\oe}uds à prêt}
+
+{
+\textsf{\ \ état de départ }${\leftarrow}$\textsf{ Attente}}
+
+{\sffamily
+\ \ file.enfiler(départ)}
+
+{\sffamily
+\ \ \textbf{tant que} NON file.estVide( ) \textbf{faire}}
+
+{
+\textsf{\ \ \ \ n{\oe}ud }${\leftarrow}$\textsf{ file.défiler( )}}
+
+{\sffamily
+\ \ \ \ // traitement du n{\oe}ud}
+
+{
+\textsf{\ \ \ \ état de n{\oe}ud }${\leftarrow}$\textsf{ Traité}}
+
+{\sffamily
+\ \ \ \ \textbf{pour} tous les voisins de n{\oe}uds \textbf{faire}}
+
+{\sffamily
+\ \ \ \ \ \ \textbf{si} état de voisin = Prêt \textbf{alors}}
+
+{
+\textsf{\ \ \ \ \ \ \ \ état de voisin }${\leftarrow}$\textsf{ Attente}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ file.enfiler(voisin)}
+
+{\sffamily
+\ \ \ \ \ \ \textbf{fin si}}
+
+{\sffamily\bfseries
+\ \ \ \ fin pour}
+
+{\sffamily\bfseries
+\ \ fin tant}
+
+{\sffamily\bfseries
+fin}
+
+\subsubsection[]{\sffamily\itshape }
+\subsubsection[Parcours par sondage]{\sffamily\itshape Parcours par sondage}
+{
+L'algorithme est semblable au précédent, à part que l'on utilise ici une pile au lieu d'une file. Il en résulte le
+parcours suivant : à partir du n{\oe}ud de départ, on visite un voisin, puis immédiatement un voisin de ce voisin et
+ainsi de suite, on s'éloigne le plus loin possible jusqu'à un premier cul-de-sac. On revient alors en arrière et on
+recommence dans la première voie non encore visitée.}
+
+
+\bigskip
+
+{\sffamily
+\textbf{module} ParcoursSondage(départ, {\dots}) \ \ // la représentation du graphe n'est pas précisée ici}
+
+{\sffamily
+\ \ initialiser tous les états des n{\oe}uds à prêt}
+
+{
+\textsf{\ \ état de départ }${\leftarrow}$\textsf{ Attente}}
+
+{\sffamily
+\ \ pile.empiler(départ)}
+
+{\sffamily
+\ \ \textbf{tant que} NON pile.estVide( ) \textbf{faire}}
+
+{
+\textsf{\ \ \ \ n{\oe}ud }${\leftarrow}$\textsf{ pile.dépiler( )}}
+
+{\sffamily
+\ \ \ \ // traitement du n{\oe}ud}
+
+{
+\textsf{\ \ \ \ état de n{\oe}ud }${\leftarrow}$\textsf{ Traité}}
+
+{\sffamily
+\ \ \ \ \textbf{pour} tous les voisins de n{\oe}uds \textbf{faire}}
+
+{\sffamily
+\ \ \ \ \ \ \textbf{si} état de voisin = Prêt \textbf{alors}}
+
+{
+\textsf{\ \ \ \ \ \ \ \ état de voisin }${\leftarrow}$\textsf{ Attente}}
+
+{\sffamily
+\ \ \ \ \ \ \ \ pile.empiler(voisin)}
+
+{\sffamily
+\ \ \ \ \ \ \textbf{fin si}}
+
+{\sffamily\bfseries
+\ \ \ \ fin pour}
+
+{\sffamily\bfseries
+\ \ fin tant}
+
+{\sffamily\bfseries
+fin}
+
+
+\bigskip
+
+{
+Remarque.~Noter que dans ces algorithmes, il n'y a pas de contrainte sur l'ordre de visite des voisins, celui-ci
+dépendra en partie de l'énumération des n{\oe}uds choisie ou du parcours des listes d'adjacence.}
+
+
+\bigskip
+
+{
+Exemple. Dans le graphe suivant, en supposant que les voisins soient parcourus dans l'ordre des listes du tableau, le
+parcours par contagion à partir de A donnera A, D, E, B, C et le parcours par sondage A, E, D, C, B.}
+
+{\centering
+ \includegraphics[width=4.99cm,height=4.473cm]{a2012Logique2eme-img054.png}  \ \ \ \ \ \ \ \ \ \ \ \ \ 
+\includegraphics[width=5.715cm,height=3.784cm]{a2012Logique2eme-img055.png} 
+\par}
+
+\clearpage\section[5. Exercices]{\sffamily 5. Exercices}
+\liststyleWWviiiNumi
+\begin{enumerate}
+\item {
+Soit un graphe orienté dont la matrice d'adjacence est la suivante :}
+\end{enumerate}
+
+\bigskip
+
+\begin{center}
+\tablefirsthead{}
+\tablehead{}
+\tabletail{}
+\tablelasttail{}
+\begin{supertabular}{m{0.93900007cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|m{0.81600004cm}|}
+\multicolumn{1}{m{0.93900007cm}}{~
+} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ A}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ B}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ C}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering{ D}} &
+\multicolumn{1}{m{0.81600004cm}}{\centering\arraybslash{ E}}\\\hhline{~-----}
+\centering{ A} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering{ V} &
+\centering\arraybslash{ F}\\\hhline{~-----}
+\centering{ B} &
+\centering{ F} &
+\centering{ F} &
+\centering{ V} &
+\centering{ F} &
+\centering\arraybslash{ F}\\\hhline{~-----}
+\centering{ C} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering\arraybslash{ F}\\\hhline{~-----}
+\centering{ D} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering\arraybslash{ V}\\\hhline{~-----}
+\centering{ E} &
+\centering{ V} &
+\centering{ F} &
+\centering{ F} &
+\centering{ F} &
+\centering\arraybslash{ F}\\\hhline{~-----}
+\end{supertabular}
+\end{center}
+\liststyleWWviiiNumxxii
+\begin{enumerate}
+\item {
+dessinez le graphe correspondant}
+\item {
+établissez la matrice d'accessibilité par l'algorithme de Roy-Warshall}
+\item {
+que représente la matrice obtenue à la 3\textsuperscript{ème} étape de cet algorithme ?}
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\begin{enumerate}
+\item {
+Un graphe orienté est représenté par un tableau de listes d'adjacence. Le contenu de ce tableau est
+\textcolor{black}{(2), ( ), (1,3), (2, 4), (3, 5, 7), (4, 6), (5, 7), (4, 6). Dessinez un graphe correspondant.}}
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Soit le graphe orienté suivant :}
+\end{enumerate}
+
+\bigskip
+
+{\centering  \includegraphics[width=6.854cm,height=3.318cm]{a2012Logique2eme-img056.png} \par}
+
+\bigskip
+
+\liststyleWWviiiNumiii
+\begin{itemize}
+\item {
+donnez sa matrice d'adjacence, en faisant correspondre les lettres prises dans l'ordre alphabétique aux indices pris
+dans l'ordre croissant.}
+\item {
+ce graphe est-il complet? Expliquez.}
+\item {
+ce graphe contient-il des n{\oe}uds particuliers? Si oui, lesquels.}
+\item {
+existe-t-il un chemin reliant B à E ? Si oui lequel. Dans quelle étape de l'algorithme de Roy-Warshall ce chemin
+apparaît-il ? }
+\item {
+que donne l'énumération des valeurs des n{\oe}uds donnée par contagion à partir du n{\oe}ud F ? }
+\item {
+même question par sondage.}
+\end{itemize}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\begin{enumerate}
+\item {
+Soit un graphe orienté à \textit{n} n{\oe}uds (avec \textit{n} >1). Comment relier ces n{\oe}uds avec le
+nombre minimum d'arcs pour obtenir un graphe dont la matrice d'accessibilité ne contienne que des 1 ? Quel est le
+nombre minimum d'arcs requis ?}
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Est-il possible que la matrice d'accessibilité d'un graphe soit identique à sa matrice d'adjacence ?}
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Soit un graphe non orienté donné par sa matrice d'adjacence (a) symétrique (b) triangulaire supérieure. Ecrire un
+algorithme qui détermine le n{\oe}ud de plus grand degré de ce graphe. En cas d'ex-æquo, on retournera le n{\oe}ud de
+plus petit indice.}
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Soit un graphe non orienté donné par sa matrice d'adjacence. Ecrire un algorithme qui détermine le nombre de
+sous-composantes connexes de ce graphe. Même question pour un graphe orienté.}
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Soit un graphe orienté donné par sa matrice d'adjacence (\textit{n} \textsf{x} \textit{n}). Ecrire un algorithme qui
+établit la représentation de ce graphe par un tableau de listes d'entiers (a) de la classe Liste (b) de la classe
+Listechainée. }
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Problème inverse : soit un graphe orienté donné par un tableau de listes chainées d'entiers, écrire un algorithme qui
+détermine la matrice d'adjacence de ce graphe.}
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Ecrire un algorithme qui reçoit un entier \textit{n} en paramètre (\textit{n} ${\geq}$ 3) et retourne la matrice
+d'adjacence d'un graphe ayant la forme suivante : le contour est un \textit{n}{}-gone, et chaque n{\oe}ud est relié à
+ses 4 voisins les plus proches, comme le suggère le dessin suivant dans le cas \textit{n} = 8.}
+\end{enumerate}
+
+\bigskip
+
+{\centering  \includegraphics[width=4.073cm,height=4.073cm]{a2012Logique2eme-img057.png} \par}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Pour un graphe orienté donné par un tableau de listes d'adjacence, écrire un algorithme qui détermine le n{\oe}ud de
+degré maximum. En cas d'ex-æquo, on retournera le n{\oe}ud de plus petit indice.}
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Soit un graphe orienté donné par sa matrice d'adjacence. Ecrire un algorithme qui détermine le nombre de puits du
+graphe. Même question avec les sources.}
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Ecrire l'algorithme qui calcule la matrice d'accessibilité d'un graphe orienté par la formule de la somme des puissances
+de la matrice d'adjacence. Quelle est la complexité de cet algorithme ? Comparez avec la complexité de l'algorithme de
+Roy-Warshall.}
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Soit un graphe orienté donné par un tableau de listes (de la classe Liste). Ecrire l'algorithme qui permet de parcourir
+le graphe par contagion à partir d'un n{\oe}ud de départ entré en paramètre. }
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Soit un graphe orienté donné par un tableau de listes chainées. Ecrire l'algorithme qui donne sous la même forme le
+graphe issu de la matrice d'accessibilité du graphe de départ. }
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Soit un graphe dont les valeurs attachées aux n{\oe}uds sont contenues dans un tableau valN{\oe}uds de \textit{n}
+entiers, et soit \textit{M} sa matrice d'adjacence (tableau \textit{n} \textsf{x} \textit{n} de booléens). Ecrire un
+algorithme qui supprime de ce graphe toutes les arêtes reliant deux n{\oe}uds de valeurs paires.}
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Dans un graphe orienté, une \textbf{racine} est un n{\oe}ud à partir duquel on peut atteindre tous les autres n{\oe}uds.
+Écrire un module qui reçoit en paramètre la matrice d{}'adjacence du graphe et un numéro de n{\oe}ud, et retourne un
+booléen indiquant si ce n{\oe}ud est une racine.}
+\end{enumerate}
+
+\bigskip
+
+\liststyleWWviiiNumi
+\setcounter{saveenum}{\value{enumi}}
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+\item {
+Un réseau de métro est composé de plusieurs lignes qui peuvent se croiser en certaines stations. Les lignes sont
+implémentées dans un tableau \textbf{lignes} de listes : chaque élément du tableau est une liste chainée
+bidirectionnelle contenant les noms des stations dans l'ordre de parcours d'une ligne donnée. Deux stations distinctes
+ont nécessairement des noms différents et une station n'apparaît qu'une seule fois pour chaque ligne.}
+\end{enumerate}
+
+\bigskip
+
+{
+On demande d'implémenter une classe Réseau, en complétant le code du constructeur et des 3 méthodes décrites ci-dessous
+:}
+
+
+\bigskip
+
+{\sffamily
+\textbf{classe} Réseau}
+
+{\sffamily
+\textbf{privé} : \textit{//à vous de donner les éléments privés}}
+
+{\sffamily
+\textbf{constructeur} Réseau (lignes : tableau [1 à n] de ListeBi<chaine>) }
+
+{\sffamily
+\textbf{méthode }getStations( ) $\rightarrow $ tableau [1 à m] de chaines}
+
+{\sffamily\itshape
+// retourne le tableau des noms de toutes les stations du réseau}
+
+{\sffamily
+\textbf{méthode }getAdjacence( ) $\rightarrow $ tableau [1 à m, 1 à m] de booléens}
+
+{\sffamily\itshape
+// retourne la matrice d'adjacence symétrique du graphe représentant le réseau. }
+
+{\sffamily
+\textit{Chacune des stations est représentée par l'indice que son nom a dans le tableau retourné par }getStations( )}
+
+{\sffamily
+\textbf{méthode }getDistance (station1, station2 : chaines) $\rightarrow $ entier }
+
+{\sffamily
+\textit{// retourne la matrice des longueurs des chemins les plus courts entre les différentes stations. Ici aussi
+chacune des stations est représentée par l'indice que son nom a dans le tableau retourné par }getStations( )}
+
+{\sffamily\bfseries
+fin classe}
+
+
+\bigskip
+
+{
+Remarque : on peut supposer que le réseau comporte moins de 500 stations et que le réseau est connexe.}
+
+{
+19. Implémenter l{}'interface graphe dont les méthodes sont décrites ci-dessous dans une classe (a) GrapheOrienté (b)
+GrapheNonOrienté.}
+
+{\sffamily
+\textbf{interface} Graphe<T> }
+
+{\sffamily
+\textbf{méthode} getNbN{\oe}uds( )~$\rightarrow $ entier}
+
+{\sffamily
+\textbf{méthode} ajouteN{\oe}ud(n{\oe}ud : T ) }
+
+{\sffamily
+\textbf{méthode} retireN{\oe}ud(indN{\oe}ud : entier)~$\rightarrow $ T }
+
+{\sffamily
+\textbf{méthode} setN{\oe}ud(indN{\oe}ud : entier, n{\oe}ud : T)~ }
+
+{\sffamily
+\textbf{méthode} getN{\oe}ud(indN{\oe}ud : entier)~$\rightarrow $ T }
+
+{\sffamily
+\textbf{méthode} sontAdjacents(indN{\oe}ud1 : entier, indN{\oe}ud2 : entier)~$\rightarrow $ booléen }
+
+{\sffamily
+\textbf{méthode} getDistance(indDepart : entier, indArrivee : entier)~$\rightarrow $ entier }
+
+{\sffamily
+\textbf{méthode} getAccessibles(indDepart : entier, indArrivee : entier)~$\rightarrow $ booléen }
+
+{
+\textsf{\textbf{méthode}}\textsf{ getSondage(indDepart : entier)~}[F0E0?]\textsf{ Liste<entier>
+}}
+
+{\sffamily
+// retourne la liste des n{\oe}uds dans l'ordre d'un parcours par sondage}
+
+{
+\textsf{\textbf{méthode}}\textsf{ getContagion(indDepart : entier)~}[F0E0?]\textsf{
+Liste<entier>}}
+
+{\sffamily
+// retourne la liste des n{\oe}uds dans l'ordre d'un parcours par contagion}
+
+{\sffamily\bfseries
+fin interface}
+\end{document}
