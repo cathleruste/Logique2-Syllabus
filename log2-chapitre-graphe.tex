@@ -18,7 +18,7 @@
 	théorie des graphes, que ce soit des problèmes de voyage 
 	(réseaux aériens, routiers, ferroviaires) ou des problèmes de
 	communication entre personnes (réseaux téléphoniques) 
-	ou entre ordinateurs (réseaux informatiques, internet, ...)
+	ou entre ordinateurs (réseaux informatiques, internet {\dots})
 
 	Un problème classique de la théorie des graphes, et qui a 
 	prouvé toute son utilité depuis l'invention du GPS, est la
@@ -44,9 +44,9 @@
 		\item {
 			élaboration de cartes géographiques}
 		\item {
-			représentation de relations entre individus (familiales, professionnelles, ...)}
+			représentation de relations entre individus (familiales, professionnelles {\dots})}
 		\item {
-			représentation d'automates d'états finis, de tables de décisions, ...}
+			représentation d'automates d'états finis, de tables de décisions {\dots}}
 	\end{itemize}
 	
 	Le but de cette partie du cours n'est pas d'aborder jusque 
@@ -132,8 +132,8 @@
 			$\{u, v\}$ = $\{v, u\}$)
 
 			\textbf{Exemple~:} G = (S, A) avec S = \{A, B, C, D, E, F\} et 
-			A = \{\{A, B\}, \{A, E\}, \{B, C\}, \{C, D\}, \{C, F\}, \{D, E\},
-			\{D, F\}, \{E, F\}\}
+			A = \{\{A, {dots}, \{A, {dots}, \{B, {dots}, \{C, {dots}, \{C, {dots}, \{D, {dots},
+			\{D, {dots}, \{E, F\}\}
 
 			\begin{center}
 			\includegraphics[width=4.284cm,height=3.657cm]{image/a2012Logique2eme-img043.jpg}
@@ -166,7 +166,7 @@
 			L'exemple le plus connu d'un tel graphe est la carte routière 
 			sur laquelle on indique les distances le long des routes
 			joignant deux points de repère. D'autres informations possibles 
-			sont le temps, le coût, le poids, ...
+			sont le temps, le coût, le poids {\dots}
 
 			\begin{center}
 			\includegraphics[width=9.038cm,height=7.091cm]{image/a2012Logique2eme-img045.png} 
@@ -177,7 +177,7 @@
 		
 			Un graphe est étiqueté lorsque ce sont des informations 
 			de type texte qui sont attachées sur chaque arc ou arête (par
-			exemple les numéros des routes sur une carte routière~: «~A19~» ou «~E40~», ...)
+			exemple les numéros des routes sur une carte routière~: «~A19~» ou «~E40~» {\dots})
 
 
 	\subsection{Adjacence, incidence et degré}
@@ -241,7 +241,7 @@
 			suite d'arcs adjacents de la forme~:
 
 			\begin{center}
-			$(u_0, u_1)$, $(u_1, u_2)$, $(u_2, u_3)$, ..., $(u_{n-1}, u_n)$
+			$(u_0, u_1)$, $(u_1, u_2)$, $(u_2, u_3)$, {dots}, $(u_{n-1}, u_n)$
 			\end{center}
 
 			Dans cette suite, chaque arc part du n{\oe}ud où arrive 
@@ -268,10 +268,10 @@
 			n{\oe}uds adjacents plutôt qu'une suite d'arcs ou d'arêtes.
 
 			\textbf{Exemple~:} 
-			La suite d'arêtes \{2, 3\}, \{3, 4\}, \{4, 5\}, \{5, 6\}, \{6, 7\} 
+			La suite d'arêtes \{2, {dots}, \{3, {dots}, \{4, {dots}, \{5, {dots}, \{6, 7\} 
 			du graphe non orienté ci-dessous forme un chemin de longueur 5. 
 			La distance entre les n{\oe}uds 2 et 7 est toutefois 3, 
-			car la longueur du chemin \{2, 3\}, \{3, 4\}, \{4, 7\} est plus courte. 
+			car la longueur du chemin \{2, {dots}, \{3, {dots}, \{4, 7\} est plus courte. 
 			Le diamètre de ce graphe est 5.
 
 			\begin{center}
@@ -291,7 +291,7 @@
 			peut être qualifié de la même façon.
 
 			Dans l'exemple ci-dessus, la suite d'arêtes 
-			\{4, 5\}, \{5, 6\}, \{6, 7\}, \{7, 4\} 
+			\{4, {dots}, \{5, {dots}, \{6, {dots}, \{7, 4\} 
 			forme un cycle élémentaire de	longueur 4.
 
 		\subsubsection{Connexité}
@@ -321,7 +321,7 @@
 
 		\textbf{Exemple~:} Dans le graphe suivant, il y a trois composantes 
 		connexes, respectivement formées par les sous-ensembles de n{\oe}uds 
-		\{1, 2, 3, 4, 5, 6, 7, 8, 9\}, \{10, 11, 12\} et \{13, 14, 15\}. 
+		\{1, 2, 3, 4, 5, 6, 7, 8, {dots}, \{10, 11, 12\} et \{13, 14, 15\}. 
 		La 3\textsuperscript{e} de ces composantes est un arbre.
 
 		\begin{center}
@@ -603,7 +603,7 @@
 			L'absence d'arc entre deux n{\oe}uds peut alors
 			être signalée par des valeurs aberrantes (par exemple --1 
 			ou «~infini~» pour des distances, «~rien~» pour le graphe
-			étiqueté, ...).
+			étiqueté {\dots}).
 
 			N.B.~: Quelle que soit la configuration choisie, la représentation 
 			matricielle est cependant coûteuse en mémoire, car
@@ -1122,7 +1122,7 @@
 			est valide pour les puissances suivantes.
 
 			Supposons maintenant qu'au moins un élément $(i, j)$ 
-			parmi les matrices $M$, $M^2$, $M^3$, ..., $M^n$ est vrai
+			parmi les matrices $M$, $M^2$, $M^3$, {dots}, $M^n$ est vrai
 			(où $n$ est le nombre de n{\oe}uds du graphe), 
 			alors il existe au moins un chemin (de longueur maximale $n$) 
 			entre les n{\oe}uds $i$ et $j$. On en déduit la formule suivante 
@@ -1874,7 +1874,7 @@
 					\For{k \K{de} 1 \K{à} n}
 						\For{i \K{de} 1 \K{à} n}
 							\For{j \K{de} 1 \K{à} n}
-								\Let P[i, j] \Gets min(P[i, j], P[i, k] + P[k, j])
+								\Let P[i, j] \Gets min(P[i, j], {dots}, k] + P[k, j])
 							\EndFor
 						\EndFor
 					\EndFor
@@ -2060,7 +2060,7 @@
 		%=====================================
 			
 			À partir d'un n{\oe}ud de départ, on visite d'abord ses voisins, 
-			puis les voisins des voisins et ainsi de suite, ...
+			puis les voisins des voisins et ainsi de suite {\dots}
 			On visite donc le graphe par «~couches~», d'abord les voisins 
 			dans l'entourage immédiat, puis on s'éloigne petit à
 			petit de plus en plus loin...
@@ -2203,7 +2203,7 @@
 	\begin{Exercice}{}
 		Un graphe orienté est représenté par un tableau de 
 		listes d'adjacence. Le contenu de ce tableau est
-		(2), ( ), (1,3), (2, 4), (3, 5, 7), (4, 6), (5, 7), (4, 6). 
+		(2), {dots}, (1,3), (2, 4), (3, 5, 7), (4, 6), (5, 7), (4, 6). 
 		Dessiner un graphe correspondant.
 
 	\end{Exercice}
