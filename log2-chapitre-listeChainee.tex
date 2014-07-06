@@ -61,7 +61,7 @@
 
 	Dans la terminologie moderne, le terme \textit{liste} est 
 	plutôt utilisé pour dénoter toute collection séquentielle
-	d'éléments (il existe un premier élément, un deuxième, ...). 
+	d'éléments (il existe un premier élément, un deuxième{\dots}). 
 	Autrement dit, chaque élément a une position précise dans
 	la collection. En ce sens, un tableau ou un fichier sont 
 	également des \textit{listes} !
@@ -100,7 +100,7 @@
 	Le dernier élément n'ayant pas de suivant, on indique \textit{rien} 
 	dans la zone réservée à l'accès au suivant. Dans la
 	littérature et selon les langages, on trouvera, à la place de \textit{rien}, 
-	les notations \textit{null}, \textit{nil}, ... ou encore Ø.
+	les notations \textit{null}, \textit{nil}{\dots} ou encore Ø.
 	
 	Le schéma ci-dessus peut encore se compactifier davantage, 
 	en une forme qui ne fait pas apparaitre la tête de liste ni
@@ -334,7 +334,7 @@
 	une nouvelle notation~: l'\textbf{accès} à une
 	variable, ou encore \textbf{référence} ou \textbf{pointeur}.
 
-	La déclaration de cet accès ce fera comme suit~:
+	La déclaration de cet accès se fera comme suit~:
 
 	\cadre{
 		\begin{pseudo}
@@ -476,7 +476,7 @@
 	\subsection{Exemple~2~: mise d'un fichier en liste chainée}
 	%==========================================================
 		
-		Dans ce 2\textsuperscript{ème} exemple, on montre comment mettre 
+		Dans ce 2\textsuperscript{e} exemple, on montre comment mettre 
 		le contenu d'un fichier de variables structurées
 		Identité (nom, prénom~: chaines, dateNais~: Date) dans une liste chainée.
 		
@@ -554,7 +554,7 @@
 	\end{center}
 
 	À condition de savoir aussi où commencer, c'est-à-dire connaitre 
-	l'indice du premier élément (le 3\textsuperscript{ème}
+	l'indice du premier élément (le 3\textsuperscript{e}
 	dans notre exemple). L'indice 0 indique la fin de la liste chainée. 
 	Pour ajouter un élément, il suffit de l'ajouter en
 	fin de tableau et d'adapter les indices sur la deuxième ligne. 
@@ -804,7 +804,7 @@
 	Dans l'implémentation procédurale, nous aurions pu plagier complètement 
 	la version OO où 2 classes ont été définies (ListeChainée et ÉlémentListe), 
 	il aurait fallu 2 structures correspondantes et les modules correspondants 
-	aux constructeurs et méthodes. Ceci a été fait pour EléméntListe mais pas 
+	aux constructeurs et méthodes. Ceci a été fait pour ÉlémentListe mais pas 
 	pour ListeChainée. À votre avis, pourquoi ?
 
 	Il existe quelques variantes à la liste chainée, notamment la 
@@ -899,9 +899,9 @@
 	éléments de la liste circulaire, puisqu'ils sont
 	identiques à ceux d'une liste chainée simple. On peut faire fonctionner 
 	ce type de liste avec les outils développés
-	pour la liste chainée, il faut simplement veillez ici à la cohérence 
+	pour la liste chainée, il faut simplement veiller ici à la cohérence 
 	de la liste circulaire, c'est-à-dire qu'à tout
-	moment le dernier élément doit être lié au premier. Noter que premier 
+	moment le dernier élément doit être lié au premier. Notez que premier 
 	a ici un sens différent du point de vue logique,
 	dans une liste circulaire il n'y a pas réellement de \textit{premier} 
 	élément, mais un accès à un élément quelconque de
@@ -999,7 +999,7 @@
 	\begin{Exercice}{Liste chainée ordonnée}
 		Soit une liste chainée dont les éléments sont triés (les 
 		éléments sont d'un type T non précisé, mais on suppose que les
-		opérateurs de comparaison (<, >, =,{\dots}) sont autorisés pour 
+		opérateurs de comparaison (<, >, ={\dots}) sont autorisés pour 
 		ce type). Réécrire les modules de l'exercice 2 en effectuant 
 		les changements optimisant le code et la performance.
 	\end{Exercice}
@@ -1041,8 +1041,8 @@
 		l'inter-classement des éléments de ces deux listes, c'est-à-dire 
 		contenant dans l'ordre le premier élément de la
 		première liste, le premier élément de la seconde liste, 
-		le 2\textsuperscript{ème} élément de la première liste, le
-		2\textsuperscript{ème} élément de la seconde liste et ainsi de suite. 
+		le 2\textsuperscript{e} élément de la première liste, le
+		2\textsuperscript{e} élément de la seconde liste et ainsi de suite. 
 		Si une des deux listes est plus longue, on
 		rattache le reste de celle-ci à la fin de la liste obtenue par 
 		l'inter-classement des premiers éléments.
@@ -1055,11 +1055,11 @@
 
 		\begin{enumerate}
 			\item {
-				En créant une 3\textsuperscript{ème} liste 
+				En créant une 3\textsuperscript{e} liste 
 				(les deux listes de départ restent intactes)}
 			\item {
 				Sans nouvelle demande d'allocation d'élément, c'est-à-dire 
-				en incorporant les éléments de la 2\textsuperscript{ème}
+				en incorporant les éléments de la 2\textsuperscript{e}
 				liste à la première.}
 		\end{enumerate}
 		
@@ -1072,7 +1072,7 @@
 	\begin{Exercice}{Fusion de listes}
 		Écrire un algorithme qui fusionne 2 listes chainées ordonnées 
 		de même type d'éléments. Comme dans l'exercice précédent,
-		on envisagera les cas ou (a) c'est une nouvelle liste qui 
+		on envisagera les cas où (a) c'est une nouvelle liste qui 
 		est créée (b) la seconde liste est incorporée à la première
 		sans nouvelle demande d'allocation d'élément.
 	\end{Exercice}
@@ -1111,7 +1111,7 @@
 						\MethodSign{intersection}{autreEnsemble~: Ensemble}{Ensemble}
 						\LComment crée l'ensemble des éléments communs aux 2 premiers 
 						\MethodSign{différence}{autreEnsemble~: Ensemble}{Ensemble}
-						\LComment retourne l'ensemble des éléments qui ne sont pas dans le 2\textsuperscript{ème}ensemble 
+						\LComment retourne l'ensemble des éléments qui ne sont pas dans le 2\textsuperscript{e}ensemble 
 				\EndClass
 			\end{pseudo}
 		}
